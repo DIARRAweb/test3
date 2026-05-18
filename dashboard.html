@@ -1,0 +1,3363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>COBRA - Dashboard</title>
+
+<style>
+body { margin: 0; font-family: "Segoe UI", sans-serif; color: #111; }
+.dashboard-box {
+max-width: 420px;
+width: 92%;
+margin: 20px auto;
+padding: 20px;
+border-radius: 22px;
+
+/* 🔥 GLASS EFFECT */
+background: rgba(255,255,255,0.12);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+
+/* 🔥 effet premium */
+border: 1px solid rgba(255,255,255,0.2);
+box-shadow:
+0 10px 40px rgba(0,0,0,0.4),
+inset 0 0 20px rgba(255,255,255,0.1);
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+.user-card { background: rgba(255,255,255,0.15);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255,255,255,0.2);
+color: white; padding: 12px; margin-top: 10px; border-radius: 14px; font-size: 14px; }
+button { width: 100%; padding: 12px; margin-top: 12px; border-radius: 14px; border: none; font-weight: bold; cursor: pointer; background: linear-gradient(45deg,#ff9a00,#ff6a00); color: white; }
+button:disabled { opacity: 0.5; }
+input, textarea { width: 100%; padding: 12px; margin-top: 10px; border-radius: 12px; border: 1px solid #ccc; background: rgba(255,255,255,0.15);
+color: white;
+border: 1px solid rgba(255,255,255,0.3); }
+input::placeholder,
+textarea::placeholder {
+color: rgba(255,255,255,0.7);
+}
+#conversionBox{ margin-top:10px;font-size:14px;display:none;}
+
+.main-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 12px 18px;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logo span {
+  background: linear-gradient(45deg,#ff9a00,#ff3d00);
+
+  background-clip: text;              /* standard */
+  -webkit-background-clip: text;      /* Chrome/Safari */
+
+  color: transparent;                 /* standard */
+  -webkit-text-fill-color: transparent; /* Chrome */
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: white;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: #00ff88;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #00ff88;
+}
+
+.status-text {
+  opacity: 0.8;
+}
+
+.main-header:hover {
+  background: rgba(0,0,0,0.6);
+  transition: 0.3s;
+}
+
+#userAvatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#userAvatar:hover {
+  transform: scale(1.08);
+}
+
+.header {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+display: flex;
+justify-content: space-between; /* 🔥 clé */
+align-items: center;
+padding: 12px 18px;
+background: rgba(0,0,0,0.6);
+backdrop-filter: blur(12px);
+color: white;
+z-index: 999;
+}
+
+.logo {
+font-size: 20px;
+font-weight: bold;
+}
+
+.header-right {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-right: 30px;
+position: relative; /* 🔥 AJOUT ICI */
+}
+
+.profile-pic {
+width: 42px;
+height: 42px;
+border-radius: 50%;
+object-fit: cover;
+border: 2px solid white;
+cursor: pointer;
+}
+
+body {
+  margin: 0;
+  padding-top: 70px; /* 🔥 espace pour le header */
+}
+
+.profile-container {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+}
+
+.profile-pic {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+}
+
+.status-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background: #00ff88;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+/* MENU */
+.user-menu {
+position: fixed;
+top: 75px;
+right: 20px;
+width: 240px;
+
+background: rgba(0,0,0,0.65);
+backdrop-filter: blur(15px);
+
+border-radius: 16px;
+box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+
+padding: 15px;
+display: flex;
+flex-direction: column;
+gap: 10px;
+
+z-index: 2000;
+transition: 0.3s;
+}
+
+.user-menu.hidden {
+opacity: 0;
+transform: translateY(-10px);
+pointer-events: none;
+}
+
+.user-menu:not(.hidden) {
+opacity: 1;
+transform: translateY(0);
+}
+
+.user-menu button {
+background: rgba(255,255,255,0.08);
+color: white;
+border: none;
+padding: 10px;
+border-radius: 10px;
+cursor: pointer;
+text-align: left;
+transition: 0.2s;
+}
+
+.user-menu button:hover {
+background: rgba(255,255,255,0.2);
+}
+
+.hidden {
+  display: none;
+}
+
+.menu-profile {
+display: flex;
+flex-direction: column;
+align-items: center;
+margin-bottom: 10px;
+}
+
+.menu-profile img {
+width: 90px;
+height: 90px;
+border-radius: 50%;
+object-fit: cover;
+border: 3px solid #ff9a00;
+box-shadow: 0 0 15px rgba(255,154,0,0.5);
+margin-bottom: 5px;
+}
+
+.menu-profile p {
+color: white;
+font-weight: bold;
+font-size: 15px;
+margin-top: 5px;
+}
+
+.menu-profile img {
+transition: 0.3s;
+}
+
+.notif-badge {
+position: absolute;
+top: -6px;
+right: -6px;
+
+background: linear-gradient(45deg,#ff3d00,#ff0000);
+color: white;
+
+font-size: 10px;
+font-weight: bold;
+
+padding: 4px 7px;
+border-radius: 50%;
+
+box-shadow: 0 0 10px rgba(255,0,0,0.6);
+}
+
+.verified {
+position: absolute;
+bottom: -2px;
+left: -2px;
+background: #1da1f2;
+color: white;
+font-size: 10px;
+padding: 2px;
+border-radius: 50%;
+border: 2px solid white;
+}
+
+.menu-status {
+color: #00ff88;
+font-size: 12px;
+margin-top: 2px;
+opacity: 0.9;
+}
+
+/* ===== STYLE 3 ===== */
+
+.main-card {
+background: linear-gradient(270deg,#ff512f,#ff9966,#ff3d00,#ff6a00);
+background-size: 600% 600%;
+animation: gradientMove 8s ease infinite;
+
+color: white;
+padding: 25px;
+border-radius: 25px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+position: relative;
+overflow: hidden;
+}
+
+/* ✨ animation */
+@keyframes gradientMove {
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.main-card h1 {
+font-size: 28px;
+margin-top: 10px;
+}
+
+.wallet-icon {
+background: rgba(255,255,255,0.15);
+padding: 20px;
+border-radius: 20px;
+font-size: 30px;
+}
+
+.main-card::after {
+content: "";
+position: absolute;
+right: -40px;
+top: -40px;
+width: 150px;
+height: 150px;
+background: rgba(255,255,255,0.1);
+border-radius: 50%;
+}
+
+.actions-grid {
+display: grid;
+grid-template-columns: repeat(2,1fr);
+gap: 12px;
+}
+
+.action-box {
+background: rgba(255,255,255,0.15);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255,255,255,0.2);
+color: white;
+padding: 15px;
+border-radius: 15px;
+text-align: center;
+font-size: 20px;
+cursor: pointer;
+transition: 0.2s;
+box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.action-box span {
+color: white;
+}
+
+.action-box span {
+display: block;
+font-size: 16px;
+margin-top: 6px;
+font-weight: 700;
+color: #222;
+letter-spacing: 0.5px;
+}
+
+/* 🔥 Icônes plus grandes */
+.action-box {
+font-size: 26px;
+font-weight: 600;
+}
+
+.action-box:hover {
+transform: scale(1.05);
+background: #fff3e0;
+}
+
+.notif-btn {
+position: relative;
+}
+
+.mini-badge {
+position: absolute;
+top: 8px;
+right: 12px;
+background: red;
+color: white;
+font-size: 10px;
+padding: 3px 6px;
+border-radius: 50%;
+display: none;
+}
+
+.modal {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0,0,0,0.6);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 9999;
+}
+
+.modal-content {
+background: rgba(255,255,255,0.12);
+backdrop-filter: blur(20px);
+border: 1px solid rgba(255,255,255,0.2);
+color: white;
+width: 90%;
+max-width: 400px;
+border-radius: 20px;
+padding: 20px;
+position: relative;
+
+max-height: 80vh;
+overflow-y: auto;
+}
+
+.close {
+position: absolute;
+top: 10px;
+right: 15px;
+cursor: pointer;
+font-size: 18px;
+}
+
+.hidden {
+display: none;
+}
+
+.history-box {
+margin-top: 20px;
+background: rgba(255,255,255,0.12);
+backdrop-filter: blur(12px);
+border: 1px solid rgba(255,255,255,0.2);
+color: white;
+padding: 15px;
+border-radius: 15px;
+box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.history-item {
+background: rgba(255,255,255,0.15);
+backdrop-filter: blur(8px);
+color: white;
+padding: 12px;
+margin-bottom: 10px;
+border-radius: 12px;
+box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+font-size: 14px;
+
+display:flex;
+flex-direction:column;
+gap:5px;
+
+animation: slideFade 0.4s ease;
+transition:0.3s;
+}
+
+/* ✨ animation entrée */
+@keyframes slideFade{
+from{
+opacity:0;
+transform:translateY(15px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* hover effet premium */
+.history-item:hover{
+transform: scale(1.02);
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.arrow-up {
+color: red;
+animation: blink 1s infinite;
+}
+
+.arrow-down {
+color: green;
+animation: blink 1s infinite;
+}
+
+@keyframes blink {
+0%{opacity:1;}
+50%{opacity:0.3;}
+100%{opacity:1;}
+}
+
+/* ===== FICHE ENVOI STYLE 3 ===== */
+
+.form-card{
+background: linear-gradient(135deg,#ff512f,#ff9966);
+padding:20px;
+border-radius:20px;
+color:white;
+animation: fadeUp 0.4s ease;
+}
+
+#passwordBox .form-card{
+background: linear-gradient(135deg,#ffffff,#f5f5f5);
+color:#333;
+}
+
+.form-title{
+text-align:center;
+margin-bottom:15px;
+font-size:22px;
+}
+
+.input-group{
+margin-bottom:12px;
+}
+
+.input-group label{
+font-size:13px;
+opacity:0.8;
+}
+
+.input-group input,
+.input-group textarea{
+width:100%;
+padding:12px;
+border-radius:12px;
+border:none;
+margin-top:5px;
+outline:none;
+}
+
+/* 🔥 CONVERSION VITRÉE */
+.glass-box{
+background: rgba(255,255,255,0.15);
+backdrop-filter: blur(10px);
+padding:12px;
+border-radius:12px;
+font-size:14px;
+margin-bottom:12px;
+}
+
+/* 🚀 BOUTON */
+.send-btn{
+background: linear-gradient(45deg,#ff9a00,#ff3d00);
+border:none;
+padding:14px;
+border-radius:15px;
+font-weight:bold;
+width:100%;
+color:white;
+transition:0.3s;
+}
+
+.send-btn:hover{
+transform: scale(1.05);
+box-shadow:0 10px 20px rgba(0,0,0,0.3);
+}
+
+.contacts-box{
+background: white;
+border-radius: 15px;
+max-height: 250px;
+overflow-y: auto;
+margin-top: 8px;
+box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.contact-item{
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 12px;
+border-bottom: 1px solid #eee;
+cursor: pointer;
+transition: 0.2s;
+}
+
+.contact-item:hover{
+background: #f9f9f9;
+transform: scale(1.02);
+}
+
+.contact-avatar{
+width: 45px;
+height: 45px;
+border-radius: 50%;
+overflow: hidden;
+background: #eee;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.contact-avatar img{
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+.contact-info{
+display: flex;
+flex-direction: column;
+}
+
+.contact-name{
+font-weight: 700;
+font-size: 15px;
+color: #222;
+}
+
+.contact-phone{
+font-size: 12px;
+color: gray;
+}
+.form-card {
+font-weight: 600;
+}
+
+.form-card label {
+font-weight: 700;
+font-size: 14px;
+}
+
+.form-card input,
+.form-card textarea {
+font-size: 15px;
+font-weight: 600;
+}
+
+.form-title {
+font-weight: 800;
+letter-spacing: 0.5px;
+}
+
+.receiver-name {
+font-size: 13px;
+margin-top: 5px;
+font-weight: bold;
+}
+
+#selectedContact{
+margin-top:10px;
+background: rgba(255,255,255,0.2);
+padding:10px;
+border-radius:12px;
+display:flex;
+align-items:center;
+gap:10px;
+color:white;
+}
+
+.notif-card{
+background: rgba(255,255,255,0.95);
+border-radius: 15px;
+padding: 12px;
+margin-bottom: 10px;
+box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.notif-title{
+font-weight: bold;
+color:#333;
+}
+
+.notif-amount{
+color:#00a86b;
+font-weight:bold;
+}
+
+.notif-date{
+font-size:11px;
+color:gray;
+}
+
+@keyframes shine {
+0%{ left:-100%; }
+100%{ left:100%; }
+}
+
+@keyframes slideUp{
+from{transform:translate(-50%,50px);opacity:0;}
+to{transform:translate(-50%,0);opacity:1;}
+}
+
+.new-tx{
+animation: flash 0.6s ease;
+}
+
+@keyframes flash{
+0%{background:#e8f5e9;}
+100%{background:white;}
+}
+
+/* 🔥 BACKGROUND DYNAMIQUE */
+.hero-wall {
+position: fixed;
+inset: 0;
+z-index: -2;
+overflow: hidden;
+}
+
+.hero-wall video,
+.hero-wall img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+/* 🔥 OVERLAY (moins sombre que avant) */
+.hero-overlay {
+position: fixed;
+inset: 0;
+background: linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.65));
+z-index: -1;
+}
+
+/* 🔊 bouton audio */
+.audio-btn {
+position: fixed;
+bottom: 15px;
+right: 15px;
+z-index: 10;
+background: rgba(0,0,0,0.35);
+backdrop-filter: blur(6px);
+border: none;
+border-radius: 50%;
+width: 42px;
+height: 42px;
+color: white;
+font-size: 16px;
+cursor: pointer;
+opacity: 0.6;
+}
+
+.audio-btn:hover {
+opacity: 1;
+transform: scale(1.1);
+}
+</style>
+</head>
+
+<body>
+<!-- 🔥 BACKGROUND DYNAMIQUE -->
+<div class="hero-wall">
+<video id="bgVideo" playsinline></video>
+<img id="bgImage">
+</div>
+
+<button id="toggleAudio" class="audio-btn">🔇</button>
+
+<div class="hero-overlay"></div>
+
+<header class="header">
+  <div class="logo">💎 COBRA</div>
+
+  <div class="header-right">
+    <div class="profile-container" onclick="toggleMenu(event)">
+      <img id="profilePic" class="profile-pic" src="" alt="profil">
+
+      <div class="status-dot"></div>
+      <div class="verified">✔</div>
+
+      <!-- 🔥 BADGE -->
+      <div id="notifBadge" class="notif-badge">0</div>
+</div>
+  </div>
+</header>
+
+<div id="userMenu" class="user-menu hidden">
+
+<!-- 🔥 PHOTO PROFIL AGRANDIE -->
+<div class="menu-profile">
+<img id="menuProfilePic" src="" alt="profil">
+<p id="menuUserName"></p>
+<span class="menu-status">● En ligne</span>
+</div>
+
+<button onclick="changePhoto()">📸 Changer photo</button>
+<button onclick="openSecuritySettings()">🔐 Sécurité avancée</button>
+<button onclick="logout()">🚪 Déconnexion</button>
+
+</div>
+<main>
+<section class="dashboard-box">
+
+<!-- 🔥 CARTE STYLE 3 -->
+<div class="main-card">
+  <div>
+    <h2 id="welcome"></h2>
+    <p>💰 Solde disponible</p>
+    <h1 id="solde"></h1>
+
+      <button id="toggleBalance" style="
+      margin-top:10px;
+      background:#eee;
+      color:#333;
+      border:none;
+      padding:6px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:12px;">
+      👁 Masquer
+      </button>
+  </div>
+  <div class="wallet-icon">💼</div>
+</div>
+
+<!-- 🔥 BOUTONS -->
+<div class="actions-grid">
+
+  <div class="action-box" onclick="openModal('transferBox')">
+    💸
+    <span>Envoyer</span>
+  </div>
+
+  <div class="action-box" onclick="openModal('passwordBox')">
+    🔐
+    <span>Mot de passe</span>
+  </div>
+
+  <div class="action-box notif-btn" onclick="openModal('notifBox')">
+  🔔
+  <span>Notifications</span>
+  <div id="notifMiniBadge" class="mini-badge">0</div>
+</div>
+
+  <div class="action-box" onclick="logout()">
+    🚪
+    <span>Quitter</span>
+  </div>
+
+  <!-- 🔥 AJOUT ICI (JUSTE AVANT </div>) -->
+   <div class="action-box" onclick="showQR()">
+   📱
+   <span>Mon QR</span>
+
+</div>
+
+<!-- 🔥 CONTENU (INVISIBLE AU DÉBUT) -->
+
+
+</section>
+</main>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close" id="closeBtn">✖</span>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="history-box" style="max-width:420px;margin:20px auto;">
+<h3 onclick="toggleHistory()" style="cursor:pointer;">
+🕒 Activités récentes
+</h3>
+
+<div id="historyContent" style="display:none;">
+<div id="historyList"></div>
+</div>
+</div>
+
+<div id="hiddenZone" style="display:none;">
+
+<div id="securityBox" style="display:none;">
+  <div class="form-card">
+
+    <h2 class="form-title">🔐 Sécurité avancée</h2>
+
+    <div class="glass-box">
+      <strong>Protection du compte</strong><br>
+      Active une deuxième vérification pour renforcer l’accès à ton compte.
+    </div>
+
+    <button onclick="registerTrustedDevice()" class="send-btn">
+      📱 Définir cet appareil comme appareil personnel
+    </button>
+
+    <button onclick="enableBiometric()" class="send-btn">
+      🧬 Activer la sécurité biométrique
+    </button>
+
+    <button onclick="enableFirebaseAuth()" class="send-btn">
+      🔥 Activer Firebase Authentication
+    </button>
+
+    <div id="securityStatus" class="glass-box" style="margin-top:15px;"></div>
+
+  </div>
+</div>
+
+  <div id="notifBox" style="display:none;"></div>
+
+<div id="passwordBox" style="display:none;">
+<div class="form-card">
+
+<h2 class="form-title">🔐 Sécurité du compte</h2>
+
+<div class="input-group">
+<label>Ancien mot de passe</label>
+<input id="oldPass" type="password">
+</div>
+
+<div class="input-group">
+<label>Nouveau mot de passe</label>
+<input id="newPass" type="password">
+</div>
+
+<button onclick="changePassword()" class="send-btn">
+Modifier mot de passe
+</button>
+
+<p id="passMsg"></p>
+
+</div>
+</div>
+
+<div id="transferBox" style="display:none;">
+
+<div class="form-card">
+
+<h2 class="form-title">💸 Fiche d’envoi</h2>
+
+<div class="input-group">
+
+<input id="receiver" placeholder="+223 XX XX XX XX">
+
+<!-- 🔥 NOM AUTO -->
+<div id="receiverName" style="font-size:12px;margin-top:5px;"></div>
+
+<div id="selectedContact" class="hidden"></div>
+
+<!-- 🔥 LISTE CONTACTS -->
+
+<input id="contactSearch" placeholder="🔍 Rechercher..." style="margin-top:8px;">
+<div id="contactsList" class="contacts-box hidden"></div>
+
+</div>
+</div>
+
+<div class="input-group">
+<label>Montant</label>
+<input id="amount" type="number" placeholder="Ex: 5000">
+</div>
+
+<div id="conversionBox" class="glass-box"></div>
+
+<div class="input-group">
+<label>Raison (facultatif)</label>
+<textarea id="reason"></textarea>
+</div>
+
+<div class="input-group">
+<label>Date programmée</label>
+<input id="scheduleDate" type="datetime-local">
+</div>
+
+<button id="sendBtn" class="send-btn" onclick="sendMoney()">
+Envoyer
+</button>
+
+<p id="message"></p>
+
+</div>
+
+</div>
+
+</div>
+
+<audio id="notifSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+  getDatabase,
+  ref,
+  get,
+  update,
+  push,
+  remove,
+  onValue
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+import {
+  getStorage,
+  ref as sRef,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-storage.js";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBsKMDF-nX-4tM_Hh0JPozZRuY9x9sFmh4",
+    authDomain: "securite-53ada.firebaseapp.com",
+    databaseURL:"https://securite-53ada-default-rtdb.firebaseio.com/",
+    projectId: "securite-53ada",
+    storageBucket: "securite-53ada.firebasestorage.app" // ✅ TRÈS IMPORTANT
+};
+
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
+const db = getDatabase(app);
+const auth = getAuth(app);
+
+// ================= BACKGROUND DYNAMIQUE =================
+const video = document.getElementById("bgVideo");
+const image = document.getElementById("bgImage");
+const toggleAudioBtn = document.getElementById("toggleAudio");
+
+let isMuted = true;
+let currentIsVideo = false;
+
+// 🔊 bouton audio
+toggleAudioBtn.addEventListener("click", () => {
+isMuted = !isMuted;
+if(currentIsVideo){
+video.muted = isMuted;
+}
+toggleAudioBtn.textContent = isMuted ? "🔇" : "🔊";
+});
+
+// 🔥 fallback
+let maliMedia = [
+{type:"image", url:"https://images.unsplash.com/photo-1600172454520-134a542d7c97"},
+{type:"video", url:"https://cdn.pixabay.com/video/2018/10/09/18675-297657059_large.mp4"}
+];
+
+let index = 0;
+let currentTimeout;
+
+function switchMedia(){
+if (!maliMedia.length) return;
+
+clearTimeout(currentTimeout);
+
+const ad = maliMedia[index];
+
+// 🎬 VIDEO
+if (ad.type === "video") {
+video.src = ad.url;
+video.style.display = "block";
+image.style.display = "none";
+
+video.muted = isMuted;
+currentIsVideo = true;
+
+video.onloadedmetadata = () => {
+video.play().catch(()=>{});
+const duration = ad.duration || video.duration || 10;
+
+currentTimeout = setTimeout(() => {
+index = (index + 1) % maliMedia.length;
+switchMedia();
+}, duration * 1000);
+};
+}
+
+// 🖼 IMAGE
+else {
+image.src = ad.url;
+image.style.display = "block";
+video.style.display = "none";
+
+currentIsVideo = false;
+
+const duration = ad.duration || 10;
+
+currentTimeout = setTimeout(() => {
+index = (index + 1) % maliMedia.length;
+switchMedia();
+}, duration * 1000);
+}
+}
+
+// 🔄 restart
+function restartSlider(){
+index = 0;
+switchMedia();
+}
+
+// 🔥 démarrage
+restartSlider();
+
+// 🔥 Firebase sync
+onValue(ref(db, "ads"), snap => {
+const data = snap.val();
+if (!data) return;
+
+maliMedia = Object.values(data);
+restartSlider();
+});
+
+let currentUser = JSON.parse(localStorage.getItem("loggedUser"));
+if(!currentUser) window.location.href="index.html";
+
+/* =========================
+🔐 SECURITE AVANCEE
+========================= */
+
+function getDeviceId(){
+  let id = localStorage.getItem("cobraDeviceId");
+
+  if(!id){
+    id = "DEV-" + Date.now() + "-" + Math.random().toString(36).substring(2,10);
+    localStorage.setItem("cobraDeviceId", id);
+  }
+
+  return id;
+}
+
+function arrayBufferToBase64(buffer){
+  const bytes = new Uint8Array(buffer);
+  let binary = "";
+
+  for(let i = 0; i < bytes.byteLength; i++){
+    binary += String.fromCharCode(bytes[i]);
+  }
+
+  return btoa(binary);
+}
+
+function base64ToArrayBuffer(base64){
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+
+  for(let i = 0; i < binary.length; i++){
+    bytes[i] = binary.charCodeAt(i);
+  }
+
+  return bytes.buffer;
+}
+
+async function ensureSecurityObject(){
+  const userRef = ref(db, "users/" + currentUser.phone);
+  const snap = await get(userRef);
+
+  if(!snap.exists()) return;
+
+  const user = snap.val();
+
+  if(!user.security){
+  await update(userRef, {
+    security:{
+      biometricEnabled:false,
+      firebaseAuthEnabled:false,
+      trustedDeviceId:"",
+      firebaseEmail:"",
+      biometricCredentialId:"",
+      biometricRegisteredAt:0,
+      firebaseAuthRegisteredAt:0,
+      lastSecondAuthAt:0
+    }
+  });
+}
+}
+
+await ensureSecurityObject();
+
+/* =========================
+⏱️ SESSION DOUBLE IDENTIFICATION
+========================= */
+
+// Durée pendant laquelle on ne redemande pas la 2e identification
+// 10 minutes = 10 * 60 * 1000
+const SECOND_AUTH_VALIDITY = 10 * 60 * 1000;
+
+async function requireSecondAuth(){
+
+  const snap = await get(ref(db, "users/" + currentUser.phone));
+
+  if(!snap.exists()){
+    localStorage.removeItem("loggedUser");
+    window.location.href = "index.html";
+    return false;
+  }
+
+  const freshUser = snap.val();
+  const sec = freshUser.security || {};
+
+  const currentDevice = getDeviceId();
+  const isTrustedDevice = sec.trustedDeviceId === currentDevice;
+
+  /* 
+  ✅ Si la deuxième identification vient déjà d’être faite,
+  on ne la redemande pas dans dashboard.html
+  */
+  const lastSecondAuthAt = Number(sec.lastSecondAuthAt || 0);
+  const secondAuthStillValid =
+    lastSecondAuthAt &&
+    Date.now() - lastSecondAuthAt < SECOND_AUTH_VALIDITY;
+
+  if(secondAuthStillValid){
+    return true;
+  }
+
+  /*
+  Première connexion :
+  aucune sécurité avancée activée
+  */
+  if(!sec.biometricEnabled && !sec.firebaseAuthEnabled){
+    return true;
+  }
+
+  /*
+  Autre appareil :
+  Firebase Auth obligatoire
+  */
+  if(!isTrustedDevice){
+
+    if(!sec.firebaseAuthEnabled || !sec.firebaseEmail){
+      alert("❌ Nouvel appareil détecté. Firebase Authentication doit être activé depuis ton appareil personnel.");
+      localStorage.removeItem("loggedUser");
+      window.location.href = "index.html";
+      return false;
+    }
+
+    const firebaseOk = await verifyFirebaseAuth(sec.firebaseEmail);
+
+    if(!firebaseOk){
+      localStorage.removeItem("loggedUser");
+      window.location.href = "index.html";
+      return false;
+    }
+
+    await update(ref(db, "users/" + currentUser.phone + "/security"), {
+      lastSecondAuthAt:Date.now()
+    });
+
+    return true;
+  }
+
+  /*
+  Appareil personnel :
+  biométrie d'abord
+  */
+  if(sec.biometricEnabled){
+    const bioOk = await verifyBiometric();
+
+    if(bioOk){
+      await update(ref(db, "users/" + currentUser.phone + "/security"), {
+        lastSecondAuthAt:Date.now()
+      });
+
+      return true;
+    }
+
+    /*
+    Si biométrie échoue, on tente Firebase Auth si activé
+    */
+    if(sec.firebaseAuthEnabled && sec.firebaseEmail){
+      const firebaseOk = await verifyFirebaseAuth(sec.firebaseEmail);
+
+      if(firebaseOk){
+        await update(ref(db, "users/" + currentUser.phone + "/security"), {
+          lastSecondAuthAt:Date.now()
+        });
+
+        return true;
+      }
+    }
+
+    alert("❌ Vérification biométrique échouée");
+    localStorage.removeItem("loggedUser");
+    window.location.href = "index.html";
+    return false;
+  }
+
+  /*
+  Appareil personnel sans biométrie :
+  Firebase Auth
+  */
+  if(sec.firebaseAuthEnabled && sec.firebaseEmail){
+    const firebaseOk = await verifyFirebaseAuth(sec.firebaseEmail);
+
+    if(!firebaseOk){
+      localStorage.removeItem("loggedUser");
+      window.location.href = "index.html";
+      return false;
+    }
+
+    await update(ref(db, "users/" + currentUser.phone + "/security"), {
+      lastSecondAuthAt:Date.now()
+    });
+
+    return true;
+  }
+
+  return true;
+}
+
+async function verifyBiometric(){
+
+  if(!window.PublicKeyCredential){
+    console.log("WebAuthn non supporté");
+    return false;
+  }
+
+  const snap = await get(ref(db, "users/" + currentUser.phone));
+
+  if(!snap.exists()){
+    return false;
+  }
+
+  const user = snap.val();
+  const sec = user.security || {};
+
+  if(!sec.biometricCredentialId){
+    console.log("Aucune clé biométrique enregistrée dans Firebase");
+    return false;
+  }
+
+  try{
+
+    const challenge = new Uint8Array(32);
+    window.crypto.getRandomValues(challenge);
+
+    let credentialId;
+
+    try{
+      credentialId = base64ToArrayBuffer(sec.biometricCredentialId);
+    }catch(e){
+      console.log("Credential ID invalide :", e);
+      return false;
+    }
+
+    await navigator.credentials.get({
+      publicKey:{
+        challenge: challenge,
+
+        // ✅ IMPORTANT : même domaine que lors de la création
+        rpId: window.location.hostname,
+
+        allowCredentials:[
+          {
+            id: credentialId,
+            type: "public-key",
+            transports:["internal"]
+          }
+        ],
+
+        userVerification: "required",
+        timeout: 60000
+      }
+    });
+
+    return true;
+
+  }catch(e){
+    console.log("Biométrie refusée ou clé introuvable :", e);
+    return false;
+  }
+}
+
+async function verifyFirebaseAuth(email){
+
+  const pass = prompt(
+    "Nouvel appareil détecté ou vérification requise.\nEntre ton mot de passe Firebase Auth"
+  );
+
+  if(!pass){
+    return false;
+  }
+
+  try{
+    await signInWithEmailAndPassword(auth, email, pass);
+    return true;
+  }catch(e){
+    console.error(e);
+    alert("❌ Firebase Authentication échoué");
+    return false;
+  }
+}
+
+const secondAuthOk = await requireSecondAuth();
+
+if(!secondAuthOk){
+  throw new Error("Vérification secondaire échouée");
+}
+
+window.openSecuritySettings = async function(){
+  openModal("securityBox");
+  await loadSecurityStatus();
+};
+
+async function loadSecurityStatus(){
+  const box = document.getElementById("securityStatus");
+  const snap = await get(ref(db, "users/" + currentUser.phone));
+
+  if(!snap.exists()) return;
+
+  const user = snap.val();
+  const sec = user.security || {};
+
+  const currentDevice = getDeviceId();
+  const trusted = sec.trustedDeviceId === currentDevice;
+
+  box.innerHTML = `
+    📱 Appareil personnel : <strong>${trusted ? "Oui" : "Non"}</strong><br>
+    🧬 Biométrie : <strong>${sec.biometricEnabled ? "Activée" : "Non activée"}</strong><br>
+    🔥 Firebase Auth : <strong>${sec.firebaseAuthEnabled ? "Activé" : "Non activé"}</strong>
+  `;
+};
+
+window.registerTrustedDevice = async function(){
+  const pass = prompt("Entre ton mot de passe pour confirmer cet appareil");
+
+  if(!pass) return;
+
+  const snap = await get(ref(db, "users/" + currentUser.phone));
+
+  if(!snap.exists()){
+    alert("❌ Utilisateur introuvable");
+    return;
+  }
+
+  const user = snap.val();
+
+  if(user.password !== pass){
+    alert("❌ Mot de passe incorrect");
+    return;
+  }
+
+  const deviceId = getDeviceId();
+
+  await update(ref(db, "users/" + currentUser.phone + "/security"), {
+    trustedDeviceId: deviceId
+  });
+
+  alert("✅ Cet appareil est maintenant reconnu comme ton appareil personnel");
+  loadSecurityStatus();
+};
+
+window.enableBiometric = async function(){
+
+  if(!window.PublicKeyCredential){
+    alert("❌ Ton navigateur ne supporte pas les clés d’accès / WebAuthn");
+    return;
+  }
+
+  const pass = prompt("Entre ton mot de passe Ma Money pour activer la biométrie");
+
+  if(!pass) return;
+
+  const snap = await get(ref(db, "users/" + currentUser.phone));
+
+  if(!snap.exists()){
+    alert("❌ Utilisateur introuvable");
+    return;
+  }
+
+  const user = snap.val();
+
+  if(user.password !== pass){
+    alert("❌ Mot de passe incorrect");
+    return;
+  }
+
+  try{
+
+    const challenge = new Uint8Array(32);
+    window.crypto.getRandomValues(challenge);
+
+    const userId = new TextEncoder().encode(currentUser.phone);
+
+    const credential = await navigator.credentials.create({
+      publicKey:{
+        challenge: challenge,
+
+        // ✅ IMPORTANT : identité du site
+        rp:{
+          name: "Ma Money",
+          id: window.location.hostname
+        },
+
+        user:{
+          id: userId,
+          name: currentUser.phone,
+          displayName: currentUser.name || currentUser.phone
+        },
+
+        pubKeyCredParams:[
+          {
+            type: "public-key",
+            alg: -7
+          },
+          {
+            type: "public-key",
+            alg: -257
+          }
+        ],
+
+        // ✅ IMPORTANT : forcer clé interne du téléphone
+        authenticatorSelection:{
+          authenticatorAttachment: "platform",
+          residentKey: "required",
+          requireResidentKey: true,
+          userVerification: "required"
+        },
+
+        timeout: 60000,
+        attestation: "none"
+      }
+    });
+
+    if(!credential){
+      alert("❌ Activation annulée");
+      return;
+    }
+
+    const credentialId = arrayBufferToBase64(credential.rawId);
+
+    await update(ref(db, "users/" + currentUser.phone + "/security"), {
+      biometricEnabled: true,
+      biometricCredentialId: credentialId,
+      trustedDeviceId: getDeviceId(),
+      biometricRegisteredAt: Date.now()
+    });
+
+    alert("✅ Clé d’accès biométrique enregistrée sur ce téléphone");
+    loadSecurityStatus();
+
+  }catch(e){
+    console.error("Erreur biométrie :", e);
+
+    alert(
+      "❌ Impossible d’enregistrer la clé d’accès.\n\n" +
+      "Vérifie que :\n" +
+      "1. Ton téléphone a un verrouillage écran activé\n" +
+      "2. Chrome est à jour\n" +
+      "3. Le site est ouvert en HTTPS\n" +
+      "4. Tu n’es pas en navigation privée\n\n" +
+      "Erreur : " + e.message
+    );
+  }
+};
+
+window.enableFirebaseAuth = async function(){
+
+  const email = prompt("Entre ton email Firebase Auth");
+  if(!email) return;
+
+  const firebasePass = prompt("Crée un mot de passe Firebase Auth");
+  if(!firebasePass) return;
+
+  const accountPass = prompt("Entre ton mot de passe Ma Money pour confirmer");
+  if(!accountPass) return;
+
+  const snap = await get(ref(db, "users/" + currentUser.phone));
+
+  if(!snap.exists()){
+    alert("❌ Utilisateur introuvable");
+    return;
+  }
+
+  const user = snap.val();
+
+  if(user.password !== accountPass){
+    alert("❌ Mot de passe Ma Money incorrect");
+    return;
+  }
+
+  try{
+
+    await createUserWithEmailAndPassword(auth, email, firebasePass);
+    
+  await update(ref(db, "users/" + currentUser.phone + "/security"), {
+    firebaseAuthEnabled:true,
+    firebaseEmail:email,
+    trustedDeviceId:getDeviceId(),
+    firebaseAuthRegisteredAt:Date.now()
+  });
+
+    alert("✅ Firebase Authentication activé avec succès");
+    loadSecurityStatus();
+
+  }catch(e){
+
+    if(e.code === "auth/email-already-in-use"){
+      await update(ref(db, "users/" + currentUser.phone + "/security"), {
+        firebaseAuthEnabled:true,
+        firebaseEmail:email,
+        firebaseAuthRegisteredAt:Date.now()
+      });
+      alert("✅ Email déjà existant, Firebase Auth lié au compte");
+      loadSecurityStatus();
+      return;
+    }
+
+    console.error(e);
+    alert("❌ Erreur Firebase Auth : " + e.message);
+  }
+};
+
+const welcome=document.getElementById("welcome");
+const soldeBox=document.getElementById("solde");
+const messageBox=document.getElementById("message");
+const profilePic = document.getElementById("profilePic");
+const menuProfilePic = document.getElementById("menuProfilePic");
+const menuUserName = document.getElementById("menuUserName");
+const notifBox=document.getElementById("notifBox");
+const notifBadge = document.getElementById("notifBadge");
+const sendBtn=document.getElementById("sendBtn");
+const receiverInput=document.getElementById("receiver");
+const amountInput=document.getElementById("amount");
+const conversionBox=document.getElementById("conversionBox");
+
+welcome.innerText="👋Bienvenue "+currentUser.name;
+
+let allUsers = [];
+let currenciesData = {};
+
+async function loadContacts(){
+const snap = await get(ref(db,"users"));
+
+if(snap.exists()){
+allUsers = Object.values(snap.val());
+}
+}
+
+loadContacts();
+
+/* =========================
+🌍 CHARGER DEVISES FIREBASE
+========================= */
+
+onValue(ref(db,"currencies"),(snap)=>{
+
+currenciesData = snap.val() || {};
+
+console.log("Devises chargées :", currenciesData);
+
+});
+
+/* ===== MULTI DEVISE ===== */
+
+function normalizePhone(phone){
+return phone.replace(/\s+/g,'').replace(/[^+\d]/g,'');
+}
+
+function getCurrency(phone){
+
+for(const prefix in currenciesData){
+
+if(phone.startsWith(prefix)){
+
+return {
+code: currenciesData[prefix].code,
+symbol: currenciesData[prefix].symbol
+};
+
+}
+
+}
+
+/* défaut */
+return {
+code:"XOF",
+symbol:"FCFA"
+};
+
+}
+
+function getCountry(phone){
+
+for(const prefix in currenciesData){
+
+if(phone.startsWith(prefix)){
+
+return {
+flag: currenciesData[prefix].flag,
+name: currenciesData[prefix].country
+};
+
+}
+
+}
+
+return {
+flag:"🌍",
+name:"Inconnu"
+};
+
+}
+
+async function getLiveRate(from,to){
+
+if(from === to) return 1;
+
+try{
+
+const res =
+await fetch(
+`https://open.er-api.com/v6/latest/${from}`
+);
+
+if(!res.ok){
+return null;
+}
+
+const data = await res.json();
+
+if(
+data.result === "success" &&
+data.rates &&
+data.rates[to]
+){
+return data.rates[to];
+}
+
+return null;
+
+}catch(e){
+
+console.log("Erreur API :", e);
+
+return null;
+}
+}
+
+function formatMoney(a){ return Number(a).toLocaleString("fr-FR"); }
+
+function generateTxID(){
+const d = new Date();
+
+const date = d.getFullYear() +
+String(d.getMonth()+1).padStart(2,'0') +
+String(d.getDate()).padStart(2,'0');
+
+const time =
+String(d.getHours()).padStart(2,'0') +
+String(d.getMinutes()).padStart(2,'0') +
+String(d.getSeconds()).padStart(2,'0');
+
+const random = Math.random().toString(36).substring(2,8).toUpperCase();
+
+return `MLP-${date}-${time}-${random}`;
+}
+
+function listenBalance(){
+
+const userRef = ref(db,"users/"+currentUser.phone);
+
+onValue(userRef,(snap)=>{
+
+if(snap.exists()){
+
+currentUser = snap.val();
+localStorage.setItem("loggedUser", JSON.stringify(currentUser));
+
+const cur = getCurrency(currentUser.phone);
+
+if(localStorage.getItem("balanceVisible") === "false"){
+soldeBox.innerText = "••••••••";
+}else{
+soldeBox.innerText = formatMoney(currentUser.solde) + " " + cur.symbol;
+}
+
+/* 🔥 photo */
+let photoUrl = currentUser.photo || "https://i.imgur.com/6VBx3io.png";
+profilePic.src = photoUrl;
+menuProfilePic.src = photoUrl;
+menuUserName.innerText = currentUser.name;
+
+}
+
+});
+
+}
+listenBalance();
+
+/* 🔄 synchroniser bouton */
+const toggleBtn = document.getElementById("toggleBalance");
+
+if(localStorage.getItem("balanceVisible") === "false"){
+toggleBtn.innerText = "👁 Afficher";
+}else{
+toggleBtn.innerText = "👁 Masquer";
+}
+
+/* =============
+============
+🔒 ETAT DU SOLDE (PERSISTANT)
+========================= */
+let balanceVisible = localStorage.getItem("balanceVisible");
+
+/* si jamais vide (première fois) */
+if(balanceVisible === null){
+balanceVisible = "true";
+localStorage.setItem("balanceVisible","true");
+}
+
+document.getElementById("toggleBalance").onclick = async function(){
+
+const isVisible = localStorage.getItem("balanceVisible");
+
+if(isVisible === "true"){
+
+/* 🔒 cacher */
+localStorage.setItem("balanceVisible","false");
+soldeBox.innerText = "••••••••";
+this.innerText = "👁 Afficher";
+
+}else{
+
+/* 🔐 demander mot de passe */
+const pass = prompt("Entrez votre mot de passe");
+
+const snap = await get(ref(db,"users/"+currentUser.phone));
+
+if(snap.exists() && snap.val().password === pass){
+
+localStorage.setItem("balanceVisible","true");
+
+/* 🔥 IMPORTANT : rafraîchir DIRECTEMENT */
+const cur = getCurrency(currentUser.phone);
+soldeBox.innerText = formatMoney(currentUser.solde) + " " + cur.symbol;
+
+this.innerText = "👁 Masquer";
+
+}else{
+alert("❌ Mot de passe incorrect");
+}
+
+}
+};
+
+/* ===== CONVERSION LIVE VISUELLE ===== */
+
+async function updateConversion(){
+const receiverPhone=normalizePhone(receiverInput.value.trim());
+const amount=parseFloat(amountInput.value);
+if(!receiverPhone || !amount){ conversionBox.style.display="none"; return; }
+
+const senderCur=getCurrency(currentUser.phone);
+const receiverCur=getCurrency(receiverPhone);
+
+const rate=await getLiveRate(senderCur.code,receiverCur.code);
+if(!rate){ conversionBox.style.display="none"; return; }
+
+const converted=amount*rate;
+
+conversionBox.style.display="block";
+conversionBox.innerHTML=
+`💱 1 ${senderCur.symbol} = ${rate.toFixed(4)} ${receiverCur.symbol}<br>
+💰 Destinataire recevra : <strong>${formatMoney(converted)} ${receiverCur.symbol}</strong>`;
+}
+receiverInput.addEventListener("input",updateConversion);
+amountInput.addEventListener("input",updateConversion);
+
+/* ===== ENVOI ARGENT ===== */
+
+window.sendMoney=async function(){
+
+if(sendBtn.disabled) return;
+sendBtn.disabled=true;
+sendBtn.innerText="⏳Traitement...";
+
+try{
+
+const receiverPhone=normalizePhone(receiverInput.value.trim());
+let amount = parseFloat(amountInput.value);
+const reason=document.getElementById("reason").value.trim();
+const scheduleDate=document.getElementById("scheduleDate").value;
+
+if(!receiverPhone || amount<=0){
+messageBox.innerText="❌Données invalides";
+resetButton();return;
+}
+
+const senderSnap=await get(ref(db,"users/"+currentUser.phone));
+const receiverSnap=await get(ref(db,"users/"+receiverPhone));
+const treasurySnap=await get(ref(db,"treasury"));
+
+if(!senderSnap.exists()||!receiverSnap.exists()){
+messageBox.innerText="❌Compte introuvable";
+resetButton();return;
+}
+
+let sender=senderSnap.val();
+let receiverData=receiverSnap.val();
+let treasury = treasurySnap.exists()
+? treasurySnap.val()
+: {
+national:{
+name:"Commission nationale",
+rate:0.01,
+balance:0
+},
+international:{
+name:"Commission internationale",
+rate:0.015,
+balance:0
+},
+startup:{
+name:"Fonds soutien digital",
+rate:0.005,
+balance:0
+}
+};
+
+if(sender.frozen){messageBox.innerText="❌Compte gelé";resetButton();return;}
+if(receiverData.frozen){messageBox.innerText="❌Destinataire gelé";resetButton();return;}
+
+const senderCur=getCurrency(sender.phone);
+const receiverCur=getCurrency(receiverPhone);
+const rate=await getLiveRate(senderCur.code,receiverCur.code);
+if(!rate){messageBox.innerText="❌Impossible de récupérer le taux";resetButton();return;}
+
+/* =========================
+💰 SYSTEME MULTI TAXES PRO
+========================= */
+
+/* 🔥 montant converti */
+let convertedAmount = amount * rate;
+
+/* =========================
+🌍 LOGIQUE PAYS / TAXES
+========================= */
+
+/* 🌍 pays */
+const senderCountry =
+getCountry(sender.phone).name;
+
+const receiverCountry =
+getCountry(receiverPhone).name;
+
+/* 🌍 même pays ? */
+const sameCountry =
+senderCountry === receiverCountry;
+
+/* 🇲🇱 Mali ? */
+const isMaliSender =
+sender.phone.startsWith("+223");
+
+const isMaliReceiver =
+receiverPhone.startsWith("+223");
+
+/* 🌍 international ? */
+const isInternational =
+!sameCountry;
+
+/* ===== TAUX ===== */
+let serviceRate = 0;
+
+/* 🔥 commission */
+if(sameCountry){
+serviceRate =
+treasury.national?.rate || 0;
+}else{
+serviceRate =
+treasury.international?.rate || 0;
+}
+
+/* =========================
+🏛 FONDS SOUTIEN
+========================= */
+
+let startupRate = 0;
+
+/*
+✅ +223 → +223
+✅ +223 → +XXX
+❌ +XXX → +223
+❌ +XXX → +XXX
+*/
+
+if(isMaliSender){
+startupRate =
+treasury.startup?.rate || 0;
+}
+
+/* ===== CALCUL FRAIS ===== */
+
+/* sécuriser montant */
+amount = Number(amount) || 0;
+
+/* sécuriser taux */
+serviceRate = Number(serviceRate) || 0;
+startupRate = Number(startupRate) || 0;
+
+/* =========================
+💱 BASE DE CALCUL
+========================= */
+
+let feeBaseAmount = amount;
+
+/*
+🔥 si transfert national étranger
+ex: +1514 → +1514
+on calcule en XOF
+*/
+
+if(
+sameCountry &&
+!isMaliSender
+){
+const xofRate =
+await getLiveRate(
+senderCur.code,
+"XOF"
+);
+
+feeBaseAmount =
+amount * xofRate;
+}
+
+/* =========================
+💰 FRAIS
+========================= */
+
+/* 🔥 frais service */
+let serviceFee =
+Number(feeBaseAmount * serviceRate) || 0;
+
+/* 🔥 fonds soutien */
+let startupFee =
+Number(amount * startupRate) || 0;
+
+/*
+🔥 reconvertir frais
+vers devise utilisateur
+si national étranger
+*/
+
+if(
+sameCountry &&
+!isMaliSender
+){
+const reverseRate =
+await getLiveRate(
+"XOF",
+senderCur.code
+);
+
+serviceFee =
+serviceFee * reverseRate;
+}
+
+/* total frais */
+let totalFees =
+Number(serviceFee + startupFee) || 0;
+
+/* total débit */
+let totalDebit =
+Number(amount + totalFees) || 0;
+
+const disponible = sender.solde - (sender.frozenBalance || 0);
+
+if(disponible < totalDebit){
+messageBox.innerText="❌Solde insuffisant (fonds bloqués)";
+resetButton();
+return;
+}
+
+/* ===== TRANSFERT PROGRAMMÉ MULTI-DEVISE FIXÉ ===== */
+
+if(scheduleDate){
+await push(ref(db,"scheduledTransfers"),{
+from:sender.phone,
+to:receiverPhone,
+
+amountOriginal:amount,
+amountConverted:convertedAmount,
+
+serviceFee,
+startupFee,
+totalFees,
+
+rateUsed:rate,
+
+senderCurrency:senderCur.code,
+receiverCurrency:receiverCur.code,
+
+reason,
+scheduledFor:scheduleDate
+});
+messageBox.innerText="📅Transfert programmé";
+resetForm();resetButton();return;
+}
+
+const customID = generateTxID(); // 🔥 ID UNIQUE
+
+/* ===== TRANSFERT IMMÉDIAT ===== */
+
+sender.solde -= totalDebit;
+receiverData.solde+=convertedAmount;
+/* =========================
+🏦 ALIMENTATION TRESORERIE
+========================= */
+
+/* 🔥 SI TRANSFERT INTERNATIONAL */
+if(isInternational){
+
+/* 🔥 convertir frais en FCFA */
+const xofRate = await getLiveRate(
+senderCur.code,
+"XOF"
+);
+
+/* 🔥 frais convertis */
+const serviceFeeXOF =
+serviceFee * xofRate;
+
+const startupFeeXOF =
+startupFee * xofRate;
+
+/* 🔥 ajout trésorerie */
+treasury.international.balance += serviceFeeXOF;
+
+treasury.startup.balance += startupFeeXOF;
+
+}else{
+
+/* =========================
+🌍 NATIONAL
+========================= */
+
+/*
+🇲🇱 Mali :
+on garde normal
+*/
+
+if(isMaliSender){
+
+treasury.national.balance =
+Number(treasury.national.balance || 0)
++ Number(serviceFee || 0);
+
+treasury.startup.balance =
+Number(treasury.startup.balance || 0)
++ Number(startupFee || 0);
+
+}
+
+/*
+🌍 National étranger
+(+1514 → +1514)
+*/
+
+else{
+
+const xofRate =
+await getLiveRate(
+senderCur.code,
+"XOF"
+);
+
+const serviceFeeXOF =
+serviceFee * xofRate;
+
+treasury.national.balance =
+Number(treasury.national.balance || 0)
++ Number(serviceFeeXOF || 0);
+
+}
+
+}
+
+await update(ref(db,"users/"+sender.phone),sender);
+await update(ref(db,"users/"+receiverPhone),receiverData);
+await update(ref(db,"treasury"),treasury);
+
+const tx=await push(ref(db,"history/"+currentUser.phone),{
+customID: customID, // 🔥 AJOUT
+from:sender.phone,
+to:receiverPhone,
+amountOriginal:amount,
+amountConverted:convertedAmount,
+serviceFee,
+startupFee,
+totalFees,
+rateUsed:rate,
+reason,
+date:new Date().toLocaleString()
+});
+
+/* Notifications complètes avec réclamation */
+
+await push(ref(db,"notifications/"+receiverPhone),{
+title:"💰Argent reçu",
+phone:sender.phone,
+amount:convertedAmount,
+reason,
+date:new Date().toLocaleString(),
+claimable:false,
+seen:false
+});
+
+await push(ref(db,"history/"+receiverPhone),{
+customID: customID, // 🔥 MÊME ID
+from:sender.phone,
+to:receiverPhone,
+amountOriginal:convertedAmount,
+date:new Date().toLocaleString(),
+type:"received"
+});
+
+await push(ref(db,"notifications/"+sender.phone),{
+title:"📤Argent envoyé",
+phone:receiverPhone,
+amount:amount,
+reason,
+date:new Date().toLocaleString(),
+claimable:true,
+seen:false,
+txId:tx.key
+});
+
+messageBox.innerText="✅Transfert réussi";
+resetForm();
+loadNotifications();
+
+}catch(e){
+messageBox.innerText="❌Erreur : "+e.message;
+}
+
+resetButton();
+};
+
+/* ===============================
+   MOTEUR TRANSFERT PROGRAMMÉ PRO
+================================ */
+
+async function processScheduledTransfers(){
+
+const scheduledRef = ref(db,"scheduledTransfers");
+const snapshot = await get(scheduledRef);
+
+if(!snapshot.exists()) return;
+
+const transfers = snapshot.val();
+const now = Date.now();
+
+for(const [id, tx] of Object.entries(transfers)){
+
+if(tx.executed === true) continue;
+
+if(!tx.scheduledFor) continue;
+
+const scheduledTime = new Date(tx.scheduledFor).getTime();
+
+if(now < scheduledTime) continue;
+
+/* ===== Récupération comptes ===== */
+
+const senderSnap = await get(ref(db,"users/"+tx.from));
+const receiverSnap = await get(ref(db,"users/"+tx.to));
+const treasurySnap = await get(ref(db,"treasury"));
+
+if(!senderSnap.exists() || !receiverSnap.exists()){
+console.log("Compte introuvable");
+continue;
+}
+
+let sender = senderSnap.val();
+let receiver = receiverSnap.val();
+let treasury = treasurySnap.exists()
+? treasurySnap.val()
+: {
+national:{
+name:"Commission nationale",
+rate:0.01,
+balance:0
+},
+international:{
+name:"Commission internationale",
+rate:0.015,
+balance:0
+},
+startup:{
+name:"Fonds soutien digital",
+rate:0.005,
+balance:0
+}
+};
+
+/* ===== Vérifications sécurité ===== */
+
+if(sender.frozen || receiver.frozen){
+console.log("Compte gelé");
+continue;
+}
+
+let totalDebit =
+tx.amountOriginal + tx.totalFees;
+
+const disponible = sender.solde - (sender.frozenBalance || 0);
+
+if(disponible < totalDebit){
+console.log("Solde insuffisant (bloqué)");
+continue;
+}
+
+/* ===== Débit / Crédit ===== */
+
+sender.solde -= totalDebit;
+receiver.solde += tx.amountConverted;
+/* =========================
+🏦 TRESORERIE PROGRAMMEE
+========================= */
+
+/* 🌍 pays */
+const senderCountry =
+getCountry(tx.from).name;
+
+const receiverCountry =
+getCountry(tx.to).name;
+
+/* 🌍 même pays ? */
+const sameCountry =
+senderCountry === receiverCountry;
+
+/* 🌍 international ? */
+const isInternational =
+!sameCountry;
+
+/* 🇲🇱 Mali ? */
+const isMaliSender =
+tx.from.startsWith("+223");
+
+if(isInternational){
+
+const xofRate =
+await getLiveRate(
+tx.senderCurrency,
+"XOF"
+);
+
+treasury.international.balance =
+Number(treasury.international.balance || 0)
++ Number((tx.serviceFee || 0) * xofRate);
+
+treasury.startup.balance =
+Number(treasury.startup.balance || 0)
++ Number((tx.startupFee || 0) * xofRate);
+
+}else{
+
+/* 🇲🇱 Mali */
+if(isMaliSender){
+
+treasury.national.balance =
+Number(treasury.national.balance || 0)
++ Number(tx.serviceFee || 0);
+
+treasury.startup.balance =
+Number(treasury.startup.balance || 0)
++ Number(tx.startupFee || 0);
+
+}
+
+/* 🌍 National étranger */
+else{
+
+const xofRate =
+await getLiveRate(
+tx.senderCurrency,
+"XOF"
+);
+
+const serviceFeeXOF =
+(tx.serviceFee || 0) * xofRate;
+
+treasury.national.balance =
+Number(treasury.national.balance || 0)
++ Number(serviceFeeXOF || 0);
+
+}
+
+}
+
+/* ===== Mise à jour comptes ===== */
+
+await update(ref(db,"users/"+tx.from), sender);
+await update(ref(db,"users/"+tx.to), receiver);
+await update(ref(db,"treasury"), treasury);
+
+/* ===== Historique transaction ===== */
+
+const historyRef = await push(ref(db,"history/"+tx.from),{
+from: tx.from,
+to: tx.to,
+amountOriginal: tx.amountOriginal,
+amountConverted: tx.amountConverted,
+serviceFee: tx.serviceFee,
+startupFee: tx.startupFee,
+totalFees: tx.totalFees,
+rateUsed: tx.rateUsed,
+reason: tx.reason,
+date: new Date().toLocaleString(),
+scheduled: true,
+status: "executed"
+});
+
+/* ===== Notifications ===== */
+
+await push(ref(db,"notifications/"+tx.to),{
+title:"💰 Argent reçu (programmé)",
+phone:tx.from,
+amount:tx.amountConverted,
+date:new Date().toLocaleString(),
+claimable:false
+});
+
+await push(ref(db,"notifications/"+tx.from),{
+title:"📤 Argent envoyé (programmé)",
+phone:tx.to,
+amount:tx.amountOriginal,
+date:new Date().toLocaleString(),
+claimable:true,
+txId:historyRef.key
+});
+
+/* ===== Marquer exécuté ===== */
+
+await update(ref(db,"scheduledTransfers/"+id),{
+executed:true,
+executedAt:Date.now()
+});
+
+}
+
+}
+
+/* Vérification toutes les 5 secondes */
+processScheduledTransfers();
+setInterval(processScheduledTransfers,5000);
+
+/* ===============================
+   SYSTEME RECLAMATION PRO
+================================ */
+
+window.sendClaim = async function(txId){
+
+const claimsRef = ref(db,"serviceClaims");
+const claimsSnap = await get(claimsRef);
+
+/* 🔥 ANTI DOUBLE */
+if(claimsSnap.exists()){
+let exists = false;
+
+Object.values(claimsSnap.val()).forEach(c=>{
+if(c.txId === txId && c.user === currentUser.phone && c.status !== "resolved"){
+exists = true;
+}
+});
+
+if(exists){
+alert("⚠ Réclamation déjà envoyée !");
+return;
+}
+}
+
+/* 🔍 récupérer transaction */
+const historyRef = ref(db,"history/"+currentUser.phone);
+const snap = await get(historyRef);
+
+if(!snap.exists()){
+alert("Transaction introuvable");
+return;
+}
+
+let tx = null;
+
+Object.entries(snap.val()).forEach(([id,data])=>{
+if(id === txId){
+tx = data;
+}
+});
+
+if(!tx){
+alert("Transaction introuvable");
+return;
+}
+
+/* 🔒 GELER L’ARGENT CHEZ LE DESTINATAIRE */
+const receiverSnap = await get(ref(db,"users/"+tx.to));
+
+if(receiverSnap.exists()){
+let receiver = receiverSnap.val();
+
+/* initialiser si vide */
+if(!receiver.frozenBalance){
+receiver.frozenBalance = 0;
+}
+
+/* =========================
+🔒 GEL MULTI-DEVISE
+========================= */
+
+/*
+🔥 on bloque uniquement
+le montant réellement reçu
+par le destinataire
+*/
+
+receiver.frozenBalance +=
+Number(tx.amountConverted || 0);
+
+/* sauvegarde */
+await update(ref(db,"users/"+tx.to),{
+frozenBalance: receiver.frozenBalance
+});
+}
+
+/* =========================
+🤖 IA ANTI FAUSSE RÉCLAMATION
+========================= */
+
+let riskScore = 0;
+
+/* 🔥 1. fréquence utilisateur */
+const claimsSnap2 = await get(ref(db,"serviceClaims"));
+
+if(claimsSnap2.exists()){
+const allClaims = Object.values(claimsSnap2.val());
+
+const userClaims = allClaims.filter(c => c.user === currentUser.phone);
+
+if(userClaims.length >= 3){
+riskScore += 2;
+}
+}
+
+/* 🔥 2. montant élevé */
+if(tx.amountOriginal >= 50000){
+riskScore += 2;
+}
+
+/* 🔥 3. réclamation trop rapide */
+const now = Date.now();
+const txTime = new Date(tx.date).getTime();
+
+if(!isNaN(txTime)){
+const diff = now - txTime;
+
+if(diff < 2 * 60 * 1000){ // moins de 2 minutes
+riskScore += 3;
+}
+}
+
+/* 🔥 4. même destinataire répété */
+if(claimsSnap2.exists()){
+const repeated = Object.values(claimsSnap2.val())
+.filter(c => c.to === tx.to && c.user === currentUser.phone);
+
+if(repeated.length >= 2){
+riskScore += 2;
+}
+}
+
+/* 🔥 CLASSIFICATION */
+let riskLevel = "normal";
+
+if(riskScore >= 5){
+riskLevel = "high_risk";
+}
+else if(riskScore >= 3){
+riskLevel = "medium_risk";
+}
+
+/* 🔥 envoi */
+await push(ref(db,"serviceClaims"),{
+txId: txId,
+user: currentUser.phone,
+from: tx.from,
+to: tx.to,
+amount: tx.amountOriginal,
+date: tx.date,
+status:"pending",
+
+/* 🤖 IA */
+risk: riskLevel,
+score: riskScore,
+
+createdAt: Date.now()
+});
+
+alert("✅ Réclamation envoyée");
+};
+
+/* ===== NOTIFICATIONS ===== */
+async function loadNotifications(){
+const snap = await get(ref(db,"notifications/"+currentUser.phone));
+notifBox.innerHTML = "";
+let count = 0;
+
+if(snap.exists()){
+Object.entries(snap.val()).reverse().forEach(([id,n])=>{
+if(!n.seen) count++;
+
+notifBox.innerHTML += `
+<div class="notif-card">
+
+<div class="notif-title">${n.title}</div>
+
+📱 ${n.phone}<br>
+
+💰 <span class="notif-amount">${formatMoney(n.amount)}</span><br>
+
+<div class="notif-date">🕒 ${n.date}</div>
+
+${n.reason || ""}
+
+${n.claimable && n.txId ? `
+<button onclick="sendClaim('${n.txId}')" style="background:red;">
+🚨 Réclamation
+</button>` : ""}
+
+<button onclick="deleteNotif('${id}')" style="background:crimson;">
+🗑 Supprimer
+</button>
+
+</div>
+`;
+});
+}
+
+/* BADGE HEADER */
+notifBadge.innerText = count;
+notifBadge.style.display = count > 0 ? "block" : "none";
+
+/* BADGE BOUTON 🔔 */
+const miniBadge = document.getElementById("notifMiniBadge");
+if(miniBadge){
+miniBadge.innerText = count;
+miniBadge.style.display = count > 0 ? "block" : "none";
+}
+}
+
+function listenNotifications(){
+
+const notifRef = ref(db,"notifications/"+currentUser.phone);
+
+onValue(notifRef,(snapshot)=>{
+
+loadNotifications();
+
+/* 🔥 animation popup */
+if(snapshot.exists()){
+const last = Object.values(snapshot.val()).pop();
+
+if(last && !last.seen){
+
+showToast(last.title + " - " + last.amount + " FCFA");
+
+}
+}
+
+});
+
+}
+
+loadNotifications();
+listenWithdrawRequests();
+listenNotifications();
+
+window.deleteNotif = async function(id){
+await remove(ref(db,"notifications/"+currentUser.phone+"/"+id));
+loadNotifications();
+};
+
+function resetForm(){
+receiverInput.value="";
+amountInput.value="";
+document.getElementById("reason").value="";
+document.getElementById("scheduleDate").value="";
+conversionBox.style.display="none";
+}
+
+function resetButton(){
+sendBtn.disabled=false;
+sendBtn.innerText="Envoyer";
+}
+
+window.toggleNotifications=()=>notifBox.style.display=notifBox.style.display==="none"?"block":"none";
+window.togglePassword=()=>passwordBox.style.display=passwordBox.style.display==="none"?"block":"none";
+window.toggleTransfer=()=>transferBox.style.display=transferBox.style.display==="none"?"block":"none";
+window.logout = async function(){
+  localStorage.removeItem("loggedUser");
+
+  try{
+    await signOut(auth);
+  }catch(e){
+    console.log("Déconnexion Firebase Auth :", e);
+  }
+
+  window.location.href = "index.html";
+};
+
+/* =========================
+🔐 CHANGEMENT MOT DE PASSE
+========================= */
+window.changePassword = async function(){
+
+const oldPass = document.getElementById("oldPass").value;
+const newPass = document.getElementById("newPass").value;
+const msg = document.getElementById("passMsg");
+
+if(!oldPass || !newPass){
+msg.innerText = "❌ Remplis tous les champs";
+return;
+}
+
+const snap = await get(ref(db,"users/"+currentUser.phone));
+
+if(!snap.exists()){
+msg.innerText = "❌ Utilisateur introuvable";
+return;
+}
+
+const user = snap.val();
+
+if(user.password !== oldPass){
+msg.innerText = "❌ Ancien mot de passe incorrect";
+return;
+}
+
+/* 🔥 update Firebase */
+await update(ref(db,"users/"+currentUser.phone),{
+password: newPass
+});
+
+msg.innerText = "✅ Mot de passe modifié avec succès";
+};
+
+const userMenu = document.getElementById("userMenu");
+
+window.toggleMenu = (e) => {
+e.stopPropagation();
+
+const modal = document.getElementById("modal");
+
+/* bloque si modal ouvert */
+if(!modal.classList.contains("hidden")) return;
+
+userMenu.classList.toggle("hidden");
+};
+
+window.changePhoto = () => {
+const input = document.createElement("input");
+input.type = "file";
+input.accept = "image/*";
+
+input.onchange = async (e) => {
+const file = e.target.files[0];
+if(!file) return;
+
+try {
+const storageRef = sRef(storage, "users/" + currentUser.phone + "_profile.jpg");
+
+await uploadBytes(storageRef, file);
+
+const url = await getDownloadURL(storageRef);
+
+// 🔥 FIREBASE DATABASE
+await update(ref(db, "users/" + currentUser.phone), {
+photo: url
+});
+
+// 🔥 LOCAL STORAGE (MANQUAIT !!!)
+currentUser.photo = url;
+localStorage.setItem("loggedUser", JSON.stringify(currentUser));
+
+// 🔥 UI UPDATE
+profilePic.src = url;
+menuProfilePic.src = url;
+
+alert("✅ Photo mise à jour");
+
+} catch(e) {
+alert("❌ " + e.message);
+}
+};
+
+input.click();
+};
+
+document.addEventListener("click", (e) => {
+const menu = document.getElementById("userMenu");
+const profile = document.querySelector(".profile-container");
+
+if (!menu.contains(e.target) && !profile.contains(e.target)) {
+menu.classList.add("hidden");
+}
+});
+
+document.getElementById("closeBtn").addEventListener("click", closeModal);
+
+window.openModal = async function(contentId){
+
+console.log("Ouverture :", contentId);
+
+const modal = document.getElementById("modal");
+const modalBody = document.getElementById("modalBody");
+const content = document.getElementById(contentId);
+
+if(!content){
+console.error("❌ Introuvable :", contentId);
+return;
+}
+
+/* 🔥 déplacer contenu */
+modalBody.innerHTML = "";
+modalBody.appendChild(content);
+content.style.display = "block";
+modal.classList.remove("hidden");
+
+/* =========================
+   🔔 NOTIFICATIONS
+========================= */
+if(contentId === "notifBox"){
+const snap = await get(ref(db,"notifications/"+currentUser.phone));
+
+if(snap.exists()){
+Object.entries(snap.val()).forEach(([id,n])=>{
+if(!n.seen){
+update(ref(db,"notifications/"+currentUser.phone+"/"+id),{
+seen:true
+});
+}
+});
+}
+
+setTimeout(loadNotifications,300);
+}
+
+/* =========================
+   📱 CONTACTS INTELLIGENTS
+========================= */
+if(contentId === "transferBox"){
+
+const searchInput = content.querySelector("#contactSearch");
+const receiver = content.querySelector("#receiver");
+const contactsBox = content.querySelector("#contactsList");
+const receiverName = content.querySelector("#receiverName");
+const amountInputModal = content.querySelector("#amount");
+const conversionBoxModal = content.querySelector("#conversionBox");
+
+/* 🔥 ouverture contacts */
+receiver.onfocus = ()=>{
+contactsBox.innerHTML = "";
+
+allUsers.forEach(user=>{
+if(user.phone === currentUser.phone) return;
+
+const country = getCountry(user.phone);
+const photo = user.photo ? user.photo : "";
+
+contactsBox.innerHTML += `
+<div class="contact-item" data-phone="${user.phone}" data-name="${user.name}">
+
+<div class="contact-avatar">
+${photo
+? `<img src="${photo}">`
+: user.name.charAt(0)}
+</div>
+
+<div class="contact-info">
+<div class="contact-name">${user.name} ${country.flag}</div>
+<div class="contact-phone">${user.phone}</div>
+</div>
+
+</div>
+`;
+});
+
+contactsBox.classList.remove("hidden");
+searchInput.classList.remove("hidden"); // 🔥 IMPORTANT
+};
+
+searchInput.oninput = ()=>{
+const value = searchInput.value.toLowerCase();
+
+const items = contactsBox.querySelectorAll(".contact-item");
+
+items.forEach(item=>{
+const name = item.dataset.name.toLowerCase();
+const phone = item.dataset.phone;
+
+if(name.includes(value) || phone.includes(value)){
+item.style.display = "flex";
+}else{
+item.style.display = "none";
+}
+});
+};
+
+/* 🔥 clic contact */
+contactsBox.onclick = (e)=>{
+
+const item = e.target.closest(".contact-item");
+if(!item) return;
+
+const phone = item.dataset.phone;
+const name = item.dataset.name;
+
+const selectedBox = content.querySelector("#selectedContact");
+
+selectedBox.innerHTML = `
+<div class="contact-avatar">${name.charAt(0)}</div>
+<div>
+<strong>${name}</strong><br>
+${phone}
+</div>
+`;
+
+selectedBox.classList.remove("hidden");
+
+receiver.value = phone;
+receiverName.innerText = "👤 " + name;
+
+/* 🔥 IMPORTANT : MASQUER LISTE + RECHERCHE */
+contactsBox.classList.add("hidden");
+searchInput.classList.add("hidden");
+
+/* 🔥 conversion */
+updateConversion();
+};
+
+/* 🔥 auto-détection */
+receiver.addEventListener("input", ()=>{
+const phone = normalizePhone(receiver.value);
+
+const found = allUsers.find(u => u.phone === phone);
+
+if(found){
+receiverName.innerText = "👤 " + found.name;
+}else{
+receiverName.innerText = "❌ Utilisateur inconnu";
+}
+
+/* 🔥 conversion live */
+updateConversion();
+});
+
+/* 🔥 fermer liste */
+document.addEventListener("click", (e)=>{
+if(!contactsBox.contains(e.target) && e.target !== receiver){
+contactsBox.classList.add("hidden");
+}
+});
+
+}
+
+};
+
+function closeModal(){
+
+const modal = document.getElementById("modal");
+const modalBody = document.getElementById("modalBody");
+const hiddenZone = document.getElementById("hiddenZone");
+
+/* 🔥 remettre les éléments à leur place */
+while(modalBody.firstChild){
+hiddenZone.appendChild(modalBody.firstChild);
+}
+
+modal.classList.add("hidden");
+}
+
+function listenHistory(){
+const historyRef = ref(db,"history/"+currentUser.phone);
+
+onValue(historyRef,(snap)=>{
+
+const historyList = document.getElementById("historyList");
+historyList.innerHTML = "";
+
+if(!snap.exists()) return;
+
+Object.entries(snap.val())
+.reverse()
+.slice(0,5)
+.forEach(([id,tx],index)=>{
+
+/* 🔥 VARIABLES */
+let icon = "⬇";
+let sign = "+";
+let color = "#00c853";
+
+/* 🔥 LOGIQUE */
+if(tx.type === "withdraw"){
+icon = "⬆";
+sign = "-";
+color = "#ff1744";
+}
+else if(tx.type === "deposit"){
+icon = "⬇";
+sign = "+";
+color = "#00c853";
+}
+else if(tx.from === currentUser.phone){
+icon = "⬆";
+sign = "-";
+color = "#ff1744";
+}
+
+/* 🔥 DATA SAFE */
+const amount = tx.amountOriginal || tx.amountConverted || tx.amount || 0;
+const phone = tx.from === currentUser.phone ? tx.to : tx.from;
+const date = tx.date || "Date inconnue";
+
+/* 🔥 animation */
+const isNew = index === 0;
+
+/* 🔥 AFFICHAGE */
+historyList.innerHTML += `
+<div class="history-item ${isNew ? 'new-tx' : ''}">
+<div style="display:flex;justify-content:space-between;align-items:center;">
+<span style="font-weight:bold;color:${color};font-size:16px;">
+${icon} ${sign}${formatMoney(amount)}
+</span>
+
+<div style="display:flex;gap:8px;align-items:center;">
+<span style="font-size:12px;color:gray;">
+${date}
+</span>
+
+<button onclick="deleteHistory('${id}')"
+style="background:red;color:white;border:none;border-radius:6px;padding:2px 6px;font-size:11px;">
+X
+</button>
+</div>
+
+</div>
+
+<div style="font-size:13px;color:#333;">
+📱 ${phone || "Inconnu"}
+</div>
+
+</div>
+`;
+
+});
+
+});
+}
+listenHistory();
+
+window.toggleHistory = function(){
+const box = document.getElementById("historyContent");
+box.style.display = box.style.display === "none" ? "block" : "none";
+};
+
+window.deleteHistory = async function(id){
+await remove(ref(db,"history/"+currentUser.phone+"/"+id));
+}
+
+document.getElementById("modal").addEventListener("click", (e)=>{
+if(e.target.id === "modal"){
+closeModal();
+}
+});
+
+window.showQR = function(){
+
+const modal = document.getElementById("modal");
+const modalBody = document.getElementById("modalBody");
+
+modalBody.innerHTML = `
+<div style="
+background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+padding:20px;
+border-radius:25px;
+color:white;
+box-shadow:0 25px 60px rgba(0,0,0,0.6);
+animation: fadeUp 0.5s ease;
+">
+
+<!-- 💳 CARTE -->
+<div style="
+background: linear-gradient(135deg,#ff9a00,#ff3d00);
+border-radius:18px;
+padding:20px;
+position:relative;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+">
+
+<div style="font-size:14px;opacity:0.8;">💎 COBRA</div>
+
+<div style="
+margin-top:25px;
+font-size:20px;
+letter-spacing:3px;
+font-weight:bold;
+">
+${currentUser.phone}
+</div>
+
+<div style="
+margin-top:20px;
+display:flex;
+justify-content:space-between;
+font-size:13px;
+">
+<span>${currentUser.name}</span>
+<span>VALID</span>
+</div>
+
+<!-- ✨ effet shine -->
+<div style="
+position:absolute;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+background: linear-gradient(120deg,transparent,rgba(255,255,255,0.4),transparent);
+animation: shine 3s infinite;
+"></div>
+
+</div>
+
+<!-- QR -->
+<div style="text-align:center;margin-top:25px;">
+<canvas id="qrCanvas" style="
+background:white;
+padding:12px;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+"></canvas>
+
+<p style="margin-top:10px;font-weight:bold;">
+Scanne pour payer
+</p>
+</div>
+
+</div>
+`;
+
+modal.classList.remove("hidden");
+
+/* 🔥 QR */
+setTimeout(()=>{
+QRCode.toCanvas(
+document.getElementById("qrCanvas"),
+currentUser.phone,
+{ width:200 }
+);
+},100);
+
+};
+
+function listenWithdrawRequests(){
+
+const reqRef = ref(db,"withdrawRequests/"+currentUser.phone);
+
+onValue(reqRef, async (snapshot)=>{
+
+if(!snapshot.exists()) return;
+
+const data = snapshot.val();
+
+for(const id in data){
+
+const req = data[id];
+
+console.log("REQ =", req);
+
+/* 🔥 ignorer si déjà traité */
+if(req.status !== "pending") continue;
+
+/* 🔥 bloquer double traitement */
+await update(ref(db,"withdrawRequests/"+currentUser.phone+"/"+id),{
+status:"processing"
+});
+
+/* 🔐 DEMANDE MOT DE PASSE */
+const pass = prompt(
+`💸 Demande de retrait
+Montant : ${req.amount} FCFA
+Frais : 0 FCFA
+Entrez votre mot de passe`
+);
+
+/* ❌ utilisateur annule */
+if(!pass){
+await update(ref(db,"withdrawRequests/"+currentUser.phone+"/"+id),{
+status:"pending"
+});
+continue;
+}
+
+/* 🔍 récupérer user */
+const userSnap = await get(ref(db,"users/"+currentUser.phone));
+
+if(!userSnap.exists()){
+alert("❌ Utilisateur introuvable");
+continue;
+}
+
+let user = userSnap.val();
+
+/* ❌ mauvais mot de passe */
+if(user.password !== pass){
+alert("❌ Mot de passe incorrect");
+
+await update(ref(db,"withdrawRequests/"+currentUser.phone+"/"+id),{
+status:"pending"
+});
+
+continue;
+}
+
+/* ❌ solde insuffisant */
+const disponible = user.solde - (user.frozenBalance || 0);
+
+if(disponible < req.amount){
+alert("❌ Solde insuffisant (fonds bloqués)");
+
+await update(ref(db,"withdrawRequests/"+currentUser.phone+"/"+id),{
+status:"pending"
+});
+
+continue;
+}
+
+/* ❌ agent manquant */
+const agentPhone = req.agent || req.fromAgent;
+
+if(!agentPhone){
+alert("❌ Agent introuvable");
+continue;
+}
+
+/* 🔍 récupérer agent */
+const agentRef = ref(db,"agents/"+agentPhone);
+const agentSnap = await get(agentRef);
+
+if(!agentSnap.exists()){
+alert("❌ Agent inexistant");
+continue;
+}
+
+let agentData = agentSnap.val();
+
+/* 🔥 conversion propre */
+const amount = Number(req.amount);
+
+/* ===== TRANSFERT ===== */
+user.solde -= amount;
+agentData.solde += amount;
+
+/* ===== UPDATE ===== */
+await update(ref(db,"users/"+currentUser.phone),{
+solde:user.solde
+});
+
+await update(agentRef,{
+solde:agentData.solde
+});
+
+/* ===== NOTIFICATIONS ===== */
+
+/* utilisateur */
+await push(ref(db,"notifications/"+currentUser.phone),{
+title:"💸 Retrait effectué",
+phone:agentPhone,
+amount:amount,
+date:new Date().toLocaleString(),
+seen:false
+});
+
+/* agent */
+await push(ref(db,"notifications/"+req.agent),{
+title:"💰 Retrait reçu",
+phone:currentUser.phone,
+amount:amount,
+date:new Date().toLocaleString(),
+seen:false
+});
+
+/* ===== SUPPRESSION DEMANDE ===== */
+await remove(ref(db,"withdrawRequests/"+currentUser.phone+"/"+id));
+
+await push(ref(db,"history/"+currentUser.phone),{
+from: currentUser.phone,
+to: req.fromAgent,
+amountOriginal: req.amount,
+date: new Date().toLocaleString(),
+type:"withdraw"
+});
+
+await push(ref(db,"history/"+agentPhone),{
+from: currentUser.phone,
+to: agentPhone,
+amountOriginal: req.amount,
+date: new Date().toLocaleString(),
+type:"withdraw"
+});
+
+alert("✅ Retrait confirmé");
+
+/* 🔄 refresh UI */
+listenBalance();
+
+}
+
+});
+
+}
+
+function showToast(message){
+
+const sound = document.getElementById("notifSound");
+sound.play();
+
+const toast = document.createElement("div");
+
+toast.innerText = message;
+
+toast.style = `
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:linear-gradient(45deg,#00c853,#00e676);
+color:white;
+padding:12px 20px;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+z-index:9999;
+animation:slideUp 0.4s ease;
+`;
+
+document.body.appendChild(toast);
+
+setTimeout(()=>toast.remove(),3000);
+
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+</body>
+</html>
