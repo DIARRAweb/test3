@@ -1687,75 +1687,498 @@ const conversionBox=document.getElementById("conversionBox");
 const translations = {
   fr:{
     welcome:"👋 Bienvenue ",
+    online:"● En ligne",
+
     send:"Envoyer",
     notifications:"Notifications",
     myQr:"Mon QR",
+
     balance:"💰 Solde disponible",
     hide:"👁 Masquer",
-    show:"👁 Afficher"
+    show:"👁 Afficher",
+
+    changePhoto:"📸 Changer photo",
+    changePasswordMenu:"🔐 Modifier mot de passe",
+    accountLanguageMenu:"🌍 Langue du compte",
+    advancedSecurityMenu:"🔐 Sécurité avancée",
+    logout:"🚪 Déconnexion",
+
+    languageTitle:"🌍 Langue du compte",
+    languageDescription:"Choisis la langue que tu veux utiliser dans ton compte.",
+    languageLabel:"Langue",
+    saveLanguage:"💾 Enregistrer la langue",
+    languageSaved:"✅ Langue enregistrée avec succès",
+    chooseLanguage:"❌ Choisis une langue",
+
+    securityTitle:"🔐 Sécurité avancée",
+    securityDescription:"Protection du compte<br>Active une deuxième vérification pour renforcer l’accès à ton compte.",
+    trustedDevice:"📱 Définir cet appareil comme appareil personnel",
+    enableBiometric:"🧬 Activer la sécurité biométrique",
+    enableFirebaseAuth:"🔥 Activer Firebase Authentication",
+
+    passwordTitle:"🔐 Sécurité du compte",
+    oldPassword:"Ancien mot de passe",
+    newPassword:"Nouveau mot de passe",
+    changePasswordBtn:"Modifier mot de passe",
+
+    transferTitle:"💸 Fiche d’envoi",
+    receiverPlaceholder:"+223 XX XX XX XX",
+    searchPlaceholder:"🔍 Rechercher...",
+    amountLabel:"Montant",
+    amountPlaceholder:"Ex: 5000",
+    reasonLabel:"Raison (facultatif)",
+    scheduleDateLabel:"Date programmée",
+
+    recentActivities:"🕒 Activités récentes",
+    processing:"⏳Traitement...",
+    invalidData:"❌Données invalides",
+    accountNotFound:"❌Compte introuvable",
+    frozenAccount:"❌Compte gelé",
+    frozenReceiver:"❌Destinataire gelé",
+    rateError:"❌Impossible de récupérer le taux",
+    insufficientBalance:"❌Solde insuffisant (fonds bloqués)",
+    scheduledTransfer:"📅Transfert programmé",
+    transferSuccess:"✅Transfert réussi",
+    wrongPassword:"❌ Mot de passe incorrect",
+    enterPassword:"Entrez votre mot de passe",
+    fillAllFields:"❌ Remplis tous les champs",
+    userNotFound:"❌ Utilisateur introuvable",
+    oldPasswordWrong:"❌ Ancien mot de passe incorrect",
+    passwordChanged:"✅ Mot de passe modifié avec succès"
   },
+
   en:{
     welcome:"👋 Welcome ",
+    online:"● Online",
+
     send:"Send",
     notifications:"Notifications",
     myQr:"My QR",
+
     balance:"💰 Available balance",
     hide:"👁 Hide",
-    show:"👁 Show"
+    show:"👁 Show",
+
+    changePhoto:"📸 Change photo",
+    changePasswordMenu:"🔐 Change password",
+    accountLanguageMenu:"🌍 Account language",
+    advancedSecurityMenu:"🔐 Advanced security",
+    logout:"🚪 Logout",
+
+    languageTitle:"🌍 Account language",
+    languageDescription:"Choose the language you want to use in your account.",
+    languageLabel:"Language",
+    saveLanguage:"💾 Save language",
+    languageSaved:"✅ Language saved successfully",
+    chooseLanguage:"❌ Choose a language",
+
+    securityTitle:"🔐 Advanced security",
+    securityDescription:"Account protection<br>Enable a second verification to strengthen access to your account.",
+    trustedDevice:"📱 Set this device as personal device",
+    enableBiometric:"🧬 Enable biometric security",
+    enableFirebaseAuth:"🔥 Enable Firebase Authentication",
+
+    passwordTitle:"🔐 Account security",
+    oldPassword:"Old password",
+    newPassword:"New password",
+    changePasswordBtn:"Change password",
+
+    transferTitle:"💸 Send form",
+    receiverPlaceholder:"+223 XX XX XX XX",
+    searchPlaceholder:"🔍 Search...",
+    amountLabel:"Amount",
+    amountPlaceholder:"Ex: 5000",
+    reasonLabel:"Reason (optional)",
+    scheduleDateLabel:"Scheduled date",
+
+    recentActivities:"🕒 Recent activities",
+    processing:"⏳Processing...",
+    invalidData:"❌Invalid data",
+    accountNotFound:"❌Account not found",
+    frozenAccount:"❌Account frozen",
+    frozenReceiver:"❌Receiver frozen",
+    rateError:"❌Unable to get exchange rate",
+    insufficientBalance:"❌Insufficient balance (blocked funds)",
+    scheduledTransfer:"📅Scheduled transfer",
+    transferSuccess:"✅Transfer successful",
+    wrongPassword:"❌ Wrong password",
+    enterPassword:"Enter your password",
+    fillAllFields:"❌ Fill in all fields",
+    userNotFound:"❌ User not found",
+    oldPasswordWrong:"❌ Old password incorrect",
+    passwordChanged:"✅ Password changed successfully"
   },
+
   zh:{
     welcome:"👋 欢迎 ",
+    online:"● 在线",
+
     send:"发送",
     notifications:"通知",
     myQr:"我的二维码",
+
     balance:"💰 可用余额",
     hide:"👁 隐藏",
-    show:"👁 显示"
+    show:"👁 显示",
+
+    changePhoto:"📸 更换照片",
+    changePasswordMenu:"🔐 修改密码",
+    accountLanguageMenu:"🌍 账户语言",
+    advancedSecurityMenu:"🔐 高级安全",
+    logout:"🚪 退出登录",
+
+    languageTitle:"🌍 账户语言",
+    languageDescription:"选择你想在账户中使用的语言。",
+    languageLabel:"语言",
+    saveLanguage:"💾 保存语言",
+    languageSaved:"✅ 语言保存成功",
+    chooseLanguage:"❌ 请选择语言",
+
+    securityTitle:"🔐 高级安全",
+    securityDescription:"账户保护<br>启用第二次验证以加强账户安全。",
+    trustedDevice:"📱 将此设备设为个人设备",
+    enableBiometric:"🧬 启用生物识别安全",
+    enableFirebaseAuth:"🔥 启用 Firebase 身份验证",
+
+    passwordTitle:"🔐 账户安全",
+    oldPassword:"旧密码",
+    newPassword:"新密码",
+    changePasswordBtn:"修改密码",
+
+    transferTitle:"💸 转账表单",
+    receiverPlaceholder:"+223 XX XX XX XX",
+    searchPlaceholder:"🔍 搜索...",
+    amountLabel:"金额",
+    amountPlaceholder:"例如：5000",
+    reasonLabel:"原因（可选）",
+    scheduleDateLabel:"预约日期",
+
+    recentActivities:"🕒 最近活动",
+    processing:"⏳处理中...",
+    invalidData:"❌数据无效",
+    accountNotFound:"❌账户未找到",
+    frozenAccount:"❌账户被冻结",
+    frozenReceiver:"❌收款人被冻结",
+    rateError:"❌无法获取汇率",
+    insufficientBalance:"❌余额不足（冻结资金）",
+    scheduledTransfer:"📅转账已预约",
+    transferSuccess:"✅转账成功",
+    wrongPassword:"❌ 密码错误",
+    enterPassword:"请输入密码",
+    fillAllFields:"❌ 请填写所有字段",
+    userNotFound:"❌ 用户未找到",
+    oldPasswordWrong:"❌ 旧密码错误",
+    passwordChanged:"✅ 密码修改成功"
   },
+
   ar:{
     welcome:"👋 مرحباً ",
+    online:"● متصل",
+
     send:"إرسال",
     notifications:"الإشعارات",
     myQr:"رمز QR الخاص بي",
+
     balance:"💰 الرصيد المتاح",
     hide:"👁 إخفاء",
-    show:"👁 إظهار"
+    show:"👁 إظهار",
+
+    changePhoto:"📸 تغيير الصورة",
+    changePasswordMenu:"🔐 تغيير كلمة المرور",
+    accountLanguageMenu:"🌍 لغة الحساب",
+    advancedSecurityMenu:"🔐 الأمان المتقدم",
+    logout:"🚪 تسجيل الخروج",
+
+    languageTitle:"🌍 لغة الحساب",
+    languageDescription:"اختر اللغة التي تريد استخدامها في حسابك.",
+    languageLabel:"اللغة",
+    saveLanguage:"💾 حفظ اللغة",
+    languageSaved:"✅ تم حفظ اللغة بنجاح",
+    chooseLanguage:"❌ اختر لغة",
+
+    securityTitle:"🔐 الأمان المتقدم",
+    securityDescription:"حماية الحساب<br>فعّل تحققاً ثانياً لتعزيز أمان حسابك.",
+    trustedDevice:"📱 تعيين هذا الجهاز كجهاز شخصي",
+    enableBiometric:"🧬 تفعيل الأمان البيومتري",
+    enableFirebaseAuth:"🔥 تفعيل Firebase Authentication",
+
+    passwordTitle:"🔐 أمان الحساب",
+    oldPassword:"كلمة المرور القديمة",
+    newPassword:"كلمة المرور الجديدة",
+    changePasswordBtn:"تغيير كلمة المرور",
+
+    transferTitle:"💸 نموذج الإرسال",
+    receiverPlaceholder:"+223 XX XX XX XX",
+    searchPlaceholder:"🔍 بحث...",
+    amountLabel:"المبلغ",
+    amountPlaceholder:"مثال: 5000",
+    reasonLabel:"السبب (اختياري)",
+    scheduleDateLabel:"التاريخ المجدول",
+
+    recentActivities:"🕒 الأنشطة الأخيرة",
+    processing:"⏳جارٍ المعالجة...",
+    invalidData:"❌بيانات غير صحيحة",
+    accountNotFound:"❌الحساب غير موجود",
+    frozenAccount:"❌الحساب مجمد",
+    frozenReceiver:"❌المستلم مجمد",
+    rateError:"❌تعذر الحصول على سعر الصرف",
+    insufficientBalance:"❌الرصيد غير كافٍ (أموال محجوزة)",
+    scheduledTransfer:"📅تمت جدولة التحويل",
+    transferSuccess:"✅تم التحويل بنجاح",
+    wrongPassword:"❌ كلمة المرور غير صحيحة",
+    enterPassword:"أدخل كلمة المرور",
+    fillAllFields:"❌ املأ جميع الحقول",
+    userNotFound:"❌ المستخدم غير موجود",
+    oldPasswordWrong:"❌ كلمة المرور القديمة غير صحيحة",
+    passwordChanged:"✅ تم تغيير كلمة المرور بنجاح"
   },
+
   es:{
     welcome:"👋 Bienvenido ",
+    online:"● En línea",
+
     send:"Enviar",
     notifications:"Notificaciones",
     myQr:"Mi QR",
+
     balance:"💰 Saldo disponible",
     hide:"👁 Ocultar",
-    show:"👁 Mostrar"
+    show:"👁 Mostrar",
+
+    changePhoto:"📸 Cambiar foto",
+    changePasswordMenu:"🔐 Cambiar contraseña",
+    accountLanguageMenu:"🌍 Idioma de la cuenta",
+    advancedSecurityMenu:"🔐 Seguridad avanzada",
+    logout:"🚪 Cerrar sesión",
+
+    languageTitle:"🌍 Idioma de la cuenta",
+    languageDescription:"Elige el idioma que quieres usar en tu cuenta.",
+    languageLabel:"Idioma",
+    saveLanguage:"💾 Guardar idioma",
+    languageSaved:"✅ Idioma guardado correctamente",
+    chooseLanguage:"❌ Elige un idioma",
+
+    securityTitle:"🔐 Seguridad avanzada",
+    securityDescription:"Protección de la cuenta<br>Activa una segunda verificación para reforzar el acceso a tu cuenta.",
+    trustedDevice:"📱 Definir este dispositivo como personal",
+    enableBiometric:"🧬 Activar seguridad biométrica",
+    enableFirebaseAuth:"🔥 Activar Firebase Authentication",
+
+    passwordTitle:"🔐 Seguridad de la cuenta",
+    oldPassword:"Contraseña anterior",
+    newPassword:"Nueva contraseña",
+    changePasswordBtn:"Cambiar contraseña",
+
+    transferTitle:"💸 Formulario de envío",
+    receiverPlaceholder:"+223 XX XX XX XX",
+    searchPlaceholder:"🔍 Buscar...",
+    amountLabel:"Monto",
+    amountPlaceholder:"Ej: 5000",
+    reasonLabel:"Motivo (opcional)",
+    scheduleDateLabel:"Fecha programada",
+
+    recentActivities:"🕒 Actividades recientes",
+    processing:"⏳Procesando...",
+    invalidData:"❌Datos inválidos",
+    accountNotFound:"❌Cuenta no encontrada",
+    frozenAccount:"❌Cuenta congelada",
+    frozenReceiver:"❌Destinatario congelado",
+    rateError:"❌No se pudo obtener la tasa",
+    insufficientBalance:"❌Saldo insuficiente (fondos bloqueados)",
+    scheduledTransfer:"📅Transferencia programada",
+    transferSuccess:"✅Transferencia exitosa",
+    wrongPassword:"❌ Contraseña incorrecta",
+    enterPassword:"Introduce tu contraseña",
+    fillAllFields:"❌ Completa todos los campos",
+    userNotFound:"❌ Usuario no encontrado",
+    oldPasswordWrong:"❌ Contraseña anterior incorrecta",
+    passwordChanged:"✅ Contraseña modificada correctamente"
   },
+
   pt:{
     welcome:"👋 Bem-vindo ",
+    online:"● Online",
+
     send:"Enviar",
     notifications:"Notificações",
     myQr:"Meu QR",
+
     balance:"💰 Saldo disponível",
     hide:"👁 Ocultar",
-    show:"👁 Mostrar"
+    show:"👁 Mostrar",
+
+    changePhoto:"📸 Alterar foto",
+    changePasswordMenu:"🔐 Alterar senha",
+    accountLanguageMenu:"🌍 Idioma da conta",
+    advancedSecurityMenu:"🔐 Segurança avançada",
+    logout:"🚪 Sair",
+
+    languageTitle:"🌍 Idioma da conta",
+    languageDescription:"Escolha o idioma que deseja usar na sua conta.",
+    languageLabel:"Idioma",
+    saveLanguage:"💾 Salvar idioma",
+    languageSaved:"✅ Idioma salvo com sucesso",
+    chooseLanguage:"❌ Escolha um idioma",
+
+    securityTitle:"🔐 Segurança avançada",
+    securityDescription:"Proteção da conta<br>Ative uma segunda verificação para reforçar o acesso à sua conta.",
+    trustedDevice:"📱 Definir este dispositivo como pessoal",
+    enableBiometric:"🧬 Ativar segurança biométrica",
+    enableFirebaseAuth:"🔥 Ativar Firebase Authentication",
+
+    passwordTitle:"🔐 Segurança da conta",
+    oldPassword:"Senha antiga",
+    newPassword:"Nova senha",
+    changePasswordBtn:"Alterar senha",
+
+    transferTitle:"💸 Formulário de envio",
+    receiverPlaceholder:"+223 XX XX XX XX",
+    searchPlaceholder:"🔍 Pesquisar...",
+    amountLabel:"Valor",
+    amountPlaceholder:"Ex: 5000",
+    reasonLabel:"Motivo (opcional)",
+    scheduleDateLabel:"Data programada",
+
+    recentActivities:"🕒 Atividades recentes",
+    processing:"⏳Processando...",
+    invalidData:"❌Dados inválidos",
+    accountNotFound:"❌Conta não encontrada",
+    frozenAccount:"❌Conta congelada",
+    frozenReceiver:"❌Destinatário congelado",
+    rateError:"❌Não foi possível obter a taxa",
+    insufficientBalance:"❌Saldo insuficiente (fundos bloqueados)",
+    scheduledTransfer:"📅Transferência programada",
+    transferSuccess:"✅Transferência realizada",
+    wrongPassword:"❌ Senha incorreta",
+    enterPassword:"Digite sua senha",
+    fillAllFields:"❌ Preencha todos os campos",
+    userNotFound:"❌ Usuário não encontrado",
+    oldPasswordWrong:"❌ Senha antiga incorreta",
+    passwordChanged:"✅ Senha alterada com sucesso"
   },
+
   ru:{
     welcome:"👋 Добро пожаловать ",
+    online:"● Онлайн",
+
     send:"Отправить",
     notifications:"Уведомления",
     myQr:"Мой QR",
+
     balance:"💰 Доступный баланс",
     hide:"👁 Скрыть",
-    show:"👁 Показать"
+    show:"👁 Показать",
+
+    changePhoto:"📸 Изменить фото",
+    changePasswordMenu:"🔐 Изменить пароль",
+    accountLanguageMenu:"🌍 Язык аккаунта",
+    advancedSecurityMenu:"🔐 Расширенная безопасность",
+    logout:"🚪 Выйти",
+
+    languageTitle:"🌍 Язык аккаунта",
+    languageDescription:"Выберите язык, который хотите использовать в аккаунте.",
+    languageLabel:"Язык",
+    saveLanguage:"💾 Сохранить язык",
+    languageSaved:"✅ Язык успешно сохранён",
+    chooseLanguage:"❌ Выберите язык",
+
+    securityTitle:"🔐 Расширенная безопасность",
+    securityDescription:"Защита аккаунта<br>Включите вторую проверку для усиления доступа к аккаунту.",
+    trustedDevice:"📱 Сделать это устройство личным",
+    enableBiometric:"🧬 Включить биометрию",
+    enableFirebaseAuth:"🔥 Включить Firebase Authentication",
+
+    passwordTitle:"🔐 Безопасность аккаунта",
+    oldPassword:"Старый пароль",
+    newPassword:"Новый пароль",
+    changePasswordBtn:"Изменить пароль",
+
+    transferTitle:"💸 Форма отправки",
+    receiverPlaceholder:"+223 XX XX XX XX",
+    searchPlaceholder:"🔍 Поиск...",
+    amountLabel:"Сумма",
+    amountPlaceholder:"Напр: 5000",
+    reasonLabel:"Причина (необязательно)",
+    scheduleDateLabel:"Запланированная дата",
+
+    recentActivities:"🕒 Последние действия",
+    processing:"⏳Обработка...",
+    invalidData:"❌Неверные данные",
+    accountNotFound:"❌Аккаунт не найден",
+    frozenAccount:"❌Аккаунт заморожен",
+    frozenReceiver:"❌Получатель заморожен",
+    rateError:"❌Не удалось получить курс",
+    insufficientBalance:"❌Недостаточно средств (заблокированные средства)",
+    scheduledTransfer:"📅Перевод запланирован",
+    transferSuccess:"✅Перевод успешен",
+    wrongPassword:"❌ Неверный пароль",
+    enterPassword:"Введите пароль",
+    fillAllFields:"❌ Заполните все поля",
+    userNotFound:"❌ Пользователь не найден",
+    oldPasswordWrong:"❌ Старый пароль неверен",
+    passwordChanged:"✅ Пароль успешно изменён"
   },
+
   de:{
     welcome:"👋 Willkommen ",
+    online:"● Online",
+
     send:"Senden",
     notifications:"Benachrichtigungen",
     myQr:"Mein QR",
+
     balance:"💰 Verfügbares Guthaben",
     hide:"👁 Ausblenden",
-    show:"👁 Anzeigen"
+    show:"👁 Anzeigen",
+
+    changePhoto:"📸 Foto ändern",
+    changePasswordMenu:"🔐 Passwort ändern",
+    accountLanguageMenu:"🌍 Kontosprache",
+    advancedSecurityMenu:"🔐 Erweiterte Sicherheit",
+    logout:"🚪 Abmelden",
+
+    languageTitle:"🌍 Kontosprache",
+    languageDescription:"Wähle die Sprache, die du in deinem Konto verwenden möchtest.",
+    languageLabel:"Sprache",
+    saveLanguage:"💾 Sprache speichern",
+    languageSaved:"✅ Sprache erfolgreich gespeichert",
+    chooseLanguage:"❌ Wähle eine Sprache",
+
+    securityTitle:"🔐 Erweiterte Sicherheit",
+    securityDescription:"Kontoschutz<br>Aktiviere eine zweite Überprüfung, um den Zugriff auf dein Konto zu stärken.",
+    trustedDevice:"📱 Dieses Gerät als persönliches Gerät festlegen",
+    enableBiometric:"🧬 Biometrische Sicherheit aktivieren",
+    enableFirebaseAuth:"🔥 Firebase Authentication aktivieren",
+
+    passwordTitle:"🔐 Kontosicherheit",
+    oldPassword:"Altes Passwort",
+    newPassword:"Neues Passwort",
+    changePasswordBtn:"Passwort ändern",
+
+    transferTitle:"💸 Sendeformular",
+    receiverPlaceholder:"+223 XX XX XX XX",
+    searchPlaceholder:"🔍 Suchen...",
+    amountLabel:"Betrag",
+    amountPlaceholder:"Bsp: 5000",
+    reasonLabel:"Grund (optional)",
+    scheduleDateLabel:"Geplantes Datum",
+
+    recentActivities:"🕒 Letzte Aktivitäten",
+    processing:"⏳Verarbeitung...",
+    invalidData:"❌Ungültige Daten",
+    accountNotFound:"❌Konto nicht gefunden",
+    frozenAccount:"❌Konto gesperrt",
+    frozenReceiver:"❌Empfänger gesperrt",
+    rateError:"❌Wechselkurs konnte nicht abgerufen werden",
+    insufficientBalance:"❌Unzureichendes Guthaben (gesperrte Mittel)",
+    scheduledTransfer:"📅Überweisung geplant",
+    transferSuccess:"✅Überweisung erfolgreich",
+    wrongPassword:"❌ Falsches Passwort",
+    enterPassword:"Passwort eingeben",
+    fillAllFields:"❌ Fülle alle Felder aus",
+    userNotFound:"❌ Benutzer nicht gefunden",
+    oldPasswordWrong:"❌ Altes Passwort falsch",
+    passwordChanged:"✅ Passwort erfolgreich geändert"
   }
 };
 
@@ -1767,18 +2190,39 @@ function applyLanguage(){
   const lang = getUserLang();
   const t = translations[lang] || translations.fr;
 
-  welcome.innerText = t.welcome + currentUser.name;
+  // direction arabe
+  if(lang === "ar"){
+    document.documentElement.lang = "ar";
+    document.body.dir = "rtl";
+  }else{
+    document.documentElement.lang = lang;
+    document.body.dir = "ltr";
+  }
 
+  // bienvenue
+  if(welcome){
+    welcome.innerText = t.welcome + currentUser.name;
+  }
+
+  // statut en ligne
+  const menuStatus = document.querySelector(".menu-status");
+  if(menuStatus){
+    menuStatus.innerText = t.online;
+  }
+
+  // solde disponible
   const balanceText = document.querySelector(".main-card p");
   if(balanceText){
     balanceText.innerText = t.balance;
   }
 
+  // boutons principaux
   const actionLabels = document.querySelectorAll(".action-box span");
   if(actionLabels[0]) actionLabels[0].innerText = t.send;
   if(actionLabels[1]) actionLabels[1].innerText = t.notifications;
   if(actionLabels[2]) actionLabels[2].innerText = t.myQr;
 
+  // bouton masquer / afficher
   const toggleBtn = document.getElementById("toggleBalance");
   if(toggleBtn){
     if(localStorage.getItem("balanceVisible") === "false"){
@@ -1788,12 +2232,85 @@ function applyLanguage(){
     }
   }
 
+  // menu profil
+  const menuButtons = document.querySelectorAll("#userMenu button");
+  if(menuButtons[0]) menuButtons[0].innerText = t.changePhoto;
+  if(menuButtons[1]) menuButtons[1].innerText = t.changePasswordMenu;
+  if(menuButtons[2]) menuButtons[2].innerText = t.accountLanguageMenu;
+  if(menuButtons[3]) menuButtons[3].innerText = t.advancedSecurityMenu;
+  if(menuButtons[4]) menuButtons[4].innerText = t.logout;
+
+  // titre activités récentes
+  const historyTitle = document.querySelector(".history-box h3");
+  if(historyTitle){
+    historyTitle.innerText = t.recentActivities;
+  }
+
+  // langue du compte
+  const languageTitle = document.querySelector("#languageBox .form-title");
+  if(languageTitle) languageTitle.innerText = t.languageTitle;
+
+  const languageDescription = document.querySelector("#languageBox .glass-box");
+  if(languageDescription) languageDescription.innerText = t.languageDescription;
+
+  const languageLabel = document.querySelector("#languageBox label");
+  if(languageLabel) languageLabel.innerText = t.languageLabel;
+
+  const saveLanguageBtn = document.querySelector("#languageBox button");
+  if(saveLanguageBtn) saveLanguageBtn.innerText = t.saveLanguage;
+
+  // sécurité avancée
+  const securityTitle = document.querySelector("#securityBox .form-title");
+  if(securityTitle) securityTitle.innerText = t.securityTitle;
+
+  const securityDescription = document.querySelector("#securityBox .glass-box");
+  if(securityDescription) securityDescription.innerHTML = t.securityDescription;
+
+  const securityButtons = document.querySelectorAll("#securityBox button");
+  if(securityButtons[0]) securityButtons[0].innerText = t.trustedDevice;
+  if(securityButtons[1]) securityButtons[1].innerText = t.enableBiometric;
+  if(securityButtons[2]) securityButtons[2].innerText = t.enableFirebaseAuth;
+
+  // mot de passe
+  const passwordTitle = document.querySelector("#passwordBox .form-title");
+  if(passwordTitle) passwordTitle.innerText = t.passwordTitle;
+
+  const passwordLabels = document.querySelectorAll("#passwordBox label");
+  if(passwordLabels[0]) passwordLabels[0].innerText = t.oldPassword;
+  if(passwordLabels[1]) passwordLabels[1].innerText = t.newPassword;
+
+  const passwordBtn = document.querySelector("#passwordBox button");
+  if(passwordBtn) passwordBtn.innerText = t.changePasswordBtn;
+
+  // fiche d'envoi
+  const transferTitle = document.querySelector("#transferBox .form-title");
+  if(transferTitle) transferTitle.innerText = t.transferTitle;
+
+  const receiver = document.getElementById("receiver");
+  if(receiver) receiver.placeholder = t.receiverPlaceholder;
+
+  const contactSearch = document.getElementById("contactSearch");
+  if(contactSearch) contactSearch.placeholder = t.searchPlaceholder;
+
+  const amount = document.getElementById("amount");
+  if(amount) amount.placeholder = t.amountPlaceholder;
+
+  const transferLabels = document.querySelectorAll("#transferBox label");
+  if(transferLabels[0]) transferLabels[0].innerText = t.amountLabel;
+  if(transferLabels[1]) transferLabels[1].innerText = t.reasonLabel;
+  if(transferLabels[2]) transferLabels[2].innerText = t.scheduleDateLabel;
+
+  const sendButton = document.getElementById("sendBtn");
+  if(sendButton && !sendButton.disabled){
+    sendButton.innerText = t.send;
+  }
+
+  // select langue
   const select = document.getElementById("accountLanguage");
   if(select){
     select.value = lang;
   }
 }
-
 applyLanguage();
 let allUsers = [];
 let currenciesData = {};
@@ -2038,7 +2555,7 @@ window.sendMoney=async function(){
 
 if(sendBtn.disabled) return;
 sendBtn.disabled=true;
-sendBtn.innerText="⏳Traitement...";
+sendBtn.innerText=(translations[getUserLang()] || translations.fr).processing;
 
 try{
 
@@ -2048,7 +2565,7 @@ const reason=document.getElementById("reason").value.trim();
 const scheduleDate=document.getElementById("scheduleDate").value;
 
 if(!receiverPhone || amount<=0){
-messageBox.innerText="❌Données invalides";
+messageBox.innerText=(translations[getUserLang()] || translations.fr).invalidData;
 resetButton();return;
 }
 
@@ -2057,7 +2574,7 @@ const receiverSnap=await get(ref(db,"users/"+receiverPhone));
 const treasurySnap=await get(ref(db,"treasury"));
 
 if(!senderSnap.exists()||!receiverSnap.exists()){
-messageBox.innerText="❌Compte introuvable";
+messageBox.innerText=(translations[getUserLang()] || translations.fr).accountNotFound;
 resetButton();return;
 }
 
@@ -2083,13 +2600,13 @@ balance:0
 }
 };
 
-if(sender.frozen){messageBox.innerText="❌Compte gelé";resetButton();return;}
-if(receiverData.frozen){messageBox.innerText="❌Destinataire gelé";resetButton();return;}
+if(sender.frozen){messageBox.innerText=(translations[getUserLang()] || translations.fr).frozenAccount;resetButton();return;}
+if(receiverData.frozen){messageBox.innerText=(translations[getUserLang()] || translations.fr).frozenReceiver;resetButton();return;}
 
 const senderCur=getCurrency(sender.phone);
 const receiverCur=getCurrency(receiverPhone);
 const rate=await getLiveRate(senderCur.code,receiverCur.code);
-if(!rate){messageBox.innerText="❌Impossible de récupérer le taux";resetButton();return;}
+if(!rate){messageBox.innerText=(translations[getUserLang()] || translations.fr).rateError;resetButton();return;}
 
 /* =========================
 💰 SYSTEME MULTI TAXES PRO
@@ -2232,7 +2749,7 @@ Number(amount + totalFees) || 0;
 const disponible = sender.solde - (sender.frozenBalance || 0);
 
 if(disponible < totalDebit){
-messageBox.innerText="❌Solde insuffisant (fonds bloqués)";
+messageBox.innerText=(translations[getUserLang()] || translations.fr).insufficientBalance;
 resetButton();
 return;
 }
@@ -2259,7 +2776,7 @@ receiverCurrency:receiverCur.code,
 reason,
 scheduledFor:scheduleDate
 });
-messageBox.innerText="📅Transfert programmé";
+messageBox.innerText=(translations[getUserLang()] || translations.fr).scheduledTransfer;
 resetForm();resetButton();return;
 }
 
@@ -2391,7 +2908,7 @@ seen:false,
 txId:tx.key
 });
 
-messageBox.innerText="✅Transfert réussi";
+messageBox.innerText=(translations[getUserLang()] || translations.fr).transferSuccess;
 resetForm();
 loadNotifications();
 
@@ -2854,8 +3371,9 @@ conversionBox.style.display="none";
 }
 
 function resetButton(){
+const t = translations[getUserLang()] || translations.fr;
 sendBtn.disabled=false;
-sendBtn.innerText="Envoyer";
+sendBtn.innerText=t.send;
 }
 
 window.toggleNotifications=()=>notifBox.style.display=notifBox.style.display==="none"?"block":"none";
@@ -2881,23 +3399,24 @@ window.changePassword = async function(){
 const oldPass = document.getElementById("oldPass").value;
 const newPass = document.getElementById("newPass").value;
 const msg = document.getElementById("passMsg");
+const t = translations[getUserLang()] || translations.fr;
 
 if(!oldPass || !newPass){
-msg.innerText = "❌ Remplis tous les champs";
+msg.innerText = t.fillAllFields;
 return;
 }
 
 const snap = await get(ref(db,"users/"+currentUser.phone));
 
 if(!snap.exists()){
-msg.innerText = "❌ Utilisateur introuvable";
+msg.innerText = t.userNotFound;
 return;
 }
 
 const user = snap.val();
 
 if(user.password !== oldPass){
-msg.innerText = "❌ Ancien mot de passe incorrect";
+msg.innerText = t.oldPasswordWrong;
 return;
 }
 
@@ -2906,7 +3425,7 @@ await update(ref(db,"users/"+currentUser.phone),{
 password: newPass
 });
 
-msg.innerText = "✅ Mot de passe modifié avec succès";
+msg.innerText = t.passwordChanged;
 };
 
 /* =========================
@@ -2916,9 +3435,10 @@ window.saveLanguage = async function(){
 
   const lang = document.getElementById("accountLanguage").value;
   const msg = document.getElementById("languageMsg");
+  const t = translations[lang] || translations.fr;
 
   if(!lang){
-    msg.innerText = "❌ Choisis une langue";
+    msg.innerText = t.chooseLanguage;
     return;
   }
 
@@ -2933,7 +3453,7 @@ window.saveLanguage = async function(){
 
     applyLanguage();
 
-    msg.innerText = "✅ Langue enregistrée avec succès";
+    msg.innerText = t.languageSaved;
 
   }catch(e){
     msg.innerText = "❌ Erreur : " + e.message;
