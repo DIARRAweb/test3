@@ -32,14 +32,35 @@ border: 1px solid rgba(255,255,255,0.2);
 color: white; padding: 12px; margin-top: 10px; border-radius: 14px; font-size: 14px; }
 button { width: 100%; padding: 12px; margin-top: 12px; border-radius: 14px; border: none; font-weight: bold; cursor: pointer; background: linear-gradient(45deg,#ff9a00,#ff6a00); color: white; }
 button:disabled { opacity: 0.5; }
-input, textarea { width: 100%; padding: 12px; margin-top: 10px; border-radius: 12px; border: 1px solid #ccc; background: rgba(255,255,255,0.15);
-color: white;
-border: 1px solid rgba(255,255,255,0.3); }
+button:disabled {
+  opacity: 0.5;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.15);
+  color: white;
+}
+
 input::placeholder,
 textarea::placeholder {
-color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.7);
 }
-#conversionBox{ margin-top:10px;font-size:14px;display:none;}
+
+select option {
+  color: #111;
+  background: white;
+}
+
+#conversionBox{
+  margin-top:10px;
+  font-size:14px;
+  display:none;
+}
 
 .main-header {
   position: sticky;
@@ -798,6 +819,8 @@ transform: scale(1.1);
 </div>
 
 <button onclick="changePhoto()">📸 Changer photo</button>
+<button onclick="openModal('passwordBox')">🔐 Modifier mot de passe</button>
+<button onclick="openModal('languageBox')">🌍 Langue du compte</button>
 <button onclick="openSecuritySettings()">🔐 Sécurité avancée</button>
 <button onclick="logout()">🚪 Déconnexion</button>
 
@@ -835,26 +858,16 @@ transform: scale(1.1);
     <span>Envoyer</span>
   </div>
 
-  <div class="action-box" onclick="openModal('passwordBox')">
-    🔐
-    <span>Mot de passe</span>
-  </div>
-
   <div class="action-box notif-btn" onclick="openModal('notifBox')">
-  🔔
-  <span>Notifications</span>
-  <div id="notifMiniBadge" class="mini-badge">0</div>
-</div>
-
-  <div class="action-box" onclick="logout()">
-    🚪
-    <span>Quitter</span>
+    🔔
+    <span>Notifications</span>
+    <div id="notifMiniBadge" class="mini-badge">0</div>
   </div>
 
-  <!-- 🔥 AJOUT ICI (JUSTE AVANT </div>) -->
-   <div class="action-box" onclick="showQR()">
-   📱
-   <span>Mon QR</span>
+  <div class="action-box" onclick="showQR()">
+    📱
+    <span>Mon QR</span>
+  </div>
 
 </div>
 
@@ -882,6 +895,45 @@ transform: scale(1.1);
 </div>
 
 <div id="hiddenZone" style="display:none;">
+
+  <div id="languageBox" style="display:none;">
+  <div class="form-card">
+
+    <h2 class="form-title">🌍 Langue du compte</h2>
+
+    <div class="glass-box">
+      Choisis la langue que tu veux utiliser dans ton compte.
+    </div>
+
+    <div class="input-group">
+      <label>Langue</label>
+      <select id="accountLanguage" style="
+        width:100%;
+        padding:12px;
+        margin-top:10px;
+        border-radius:12px;
+        border:none;
+        font-weight:bold;
+      ">
+        <option value="fr">🇫🇷 Français</option>
+        <option value="en">🇺🇸 English</option>
+        <option value="zh">🇨🇳 中文 Chinois</option>
+        <option value="ar">🇸🇦 العربية Arabe</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="pt">🇵🇹 Português</option>
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="de">🇩🇪 Deutsch</option>
+      </select>
+    </div>
+
+    <button onclick="saveLanguage()" class="send-btn">
+      💾 Enregistrer la langue
+    </button>
+
+    <p id="languageMsg"></p>
+
+  </div>
+</div>
 
 <div id="securityBox" style="display:none;">
   <div class="form-card">
@@ -1632,8 +1684,117 @@ const receiverInput=document.getElementById("receiver");
 const amountInput=document.getElementById("amount");
 const conversionBox=document.getElementById("conversionBox");
 
-welcome.innerText="👋Bienvenue "+currentUser.name;
+const translations = {
+  fr:{
+    welcome:"👋 Bienvenue ",
+    send:"Envoyer",
+    notifications:"Notifications",
+    myQr:"Mon QR",
+    balance:"💰 Solde disponible",
+    hide:"👁 Masquer",
+    show:"👁 Afficher"
+  },
+  en:{
+    welcome:"👋 Welcome ",
+    send:"Send",
+    notifications:"Notifications",
+    myQr:"My QR",
+    balance:"💰 Available balance",
+    hide:"👁 Hide",
+    show:"👁 Show"
+  },
+  zh:{
+    welcome:"👋 欢迎 ",
+    send:"发送",
+    notifications:"通知",
+    myQr:"我的二维码",
+    balance:"💰 可用余额",
+    hide:"👁 隐藏",
+    show:"👁 显示"
+  },
+  ar:{
+    welcome:"👋 مرحباً ",
+    send:"إرسال",
+    notifications:"الإشعارات",
+    myQr:"رمز QR الخاص بي",
+    balance:"💰 الرصيد المتاح",
+    hide:"👁 إخفاء",
+    show:"👁 إظهار"
+  },
+  es:{
+    welcome:"👋 Bienvenido ",
+    send:"Enviar",
+    notifications:"Notificaciones",
+    myQr:"Mi QR",
+    balance:"💰 Saldo disponible",
+    hide:"👁 Ocultar",
+    show:"👁 Mostrar"
+  },
+  pt:{
+    welcome:"👋 Bem-vindo ",
+    send:"Enviar",
+    notifications:"Notificações",
+    myQr:"Meu QR",
+    balance:"💰 Saldo disponível",
+    hide:"👁 Ocultar",
+    show:"👁 Mostrar"
+  },
+  ru:{
+    welcome:"👋 Добро пожаловать ",
+    send:"Отправить",
+    notifications:"Уведомления",
+    myQr:"Мой QR",
+    balance:"💰 Доступный баланс",
+    hide:"👁 Скрыть",
+    show:"👁 Показать"
+  },
+  de:{
+    welcome:"👋 Willkommen ",
+    send:"Senden",
+    notifications:"Benachrichtigungen",
+    myQr:"Mein QR",
+    balance:"💰 Verfügbares Guthaben",
+    hide:"👁 Ausblenden",
+    show:"👁 Anzeigen"
+  }
+};
 
+function getUserLang(){
+  return currentUser.language || localStorage.getItem("accountLanguage") || "fr";
+}
+
+function applyLanguage(){
+  const lang = getUserLang();
+  const t = translations[lang] || translations.fr;
+
+  welcome.innerText = t.welcome + currentUser.name;
+
+  const balanceText = document.querySelector(".main-card p");
+  if(balanceText){
+    balanceText.innerText = t.balance;
+  }
+
+  const actionLabels = document.querySelectorAll(".action-box span");
+  if(actionLabels[0]) actionLabels[0].innerText = t.send;
+  if(actionLabels[1]) actionLabels[1].innerText = t.notifications;
+  if(actionLabels[2]) actionLabels[2].innerText = t.myQr;
+
+  const toggleBtn = document.getElementById("toggleBalance");
+  if(toggleBtn){
+    if(localStorage.getItem("balanceVisible") === "false"){
+      toggleBtn.innerText = t.show;
+    }else{
+      toggleBtn.innerText = t.hide;
+    }
+  }
+
+  const select = document.getElementById("accountLanguage");
+  if(select){
+    select.value = lang;
+  }
+}
+
+applyLanguage();
 let allUsers = [];
 let currenciesData = {};
 
@@ -1799,11 +1960,7 @@ listenBalance();
 /* 🔄 synchroniser bouton */
 const toggleBtn = document.getElementById("toggleBalance");
 
-if(localStorage.getItem("balanceVisible") === "false"){
-toggleBtn.innerText = "👁 Afficher";
-}else{
-toggleBtn.innerText = "👁 Masquer";
-}
+applyLanguage();
 
 /* =============
 ============
@@ -1826,7 +1983,7 @@ if(isVisible === "true"){
 /* 🔒 cacher */
 localStorage.setItem("balanceVisible","false");
 soldeBox.innerText = "••••••••";
-this.innerText = "👁 Afficher";
+this.innerText = (translations[getUserLang()] || translations.fr).show;
 
 }else{
 
@@ -1843,7 +2000,7 @@ localStorage.setItem("balanceVisible","true");
 const cur = getCurrency(currentUser.phone);
 soldeBox.innerText = formatMoney(currentUser.solde) + " " + cur.symbol;
 
-this.innerText = "👁 Masquer";
+this.innerText = (translations[getUserLang()] || translations.fr).hide;
 
 }else{
 alert("❌ Mot de passe incorrect");
@@ -2750,6 +2907,37 @@ password: newPass
 });
 
 msg.innerText = "✅ Mot de passe modifié avec succès";
+};
+
+/* =========================
+🌍 CHANGEMENT LANGUE COMPTE
+========================= */
+window.saveLanguage = async function(){
+
+  const lang = document.getElementById("accountLanguage").value;
+  const msg = document.getElementById("languageMsg");
+
+  if(!lang){
+    msg.innerText = "❌ Choisis une langue";
+    return;
+  }
+
+  try{
+    await update(ref(db, "users/" + currentUser.phone), {
+      language: lang
+    });
+
+    currentUser.language = lang;
+    localStorage.setItem("loggedUser", JSON.stringify(currentUser));
+    localStorage.setItem("accountLanguage", lang);
+
+    applyLanguage();
+
+    msg.innerText = "✅ Langue enregistrée avec succès";
+
+  }catch(e){
+    msg.innerText = "❌ Erreur : " + e.message;
+  }
 };
 
 const userMenu = document.getElementById("userMenu");
