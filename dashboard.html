@@ -1692,6 +1692,8 @@ const translations = {
     send:"Envoyer",
     notifications:"Notifications",
     myQr:"Mon QR",
+    valid:"VALID",
+    scanToPay:"Scanne pour payer",
 
     balance:"💰 Solde disponible",
     hide:"👁 Masquer",
@@ -1787,6 +1789,8 @@ userNotFound:"❌ Utilisateur introuvable",
     send:"Send",
     notifications:"Notifications",
     myQr:"My QR",
+    valid:"VALID",
+    scanToPay:"Scan to pay",
 
     balance:"💰 Available balance",
     hide:"👁 Hide",
@@ -1882,6 +1886,8 @@ userNotFound:"❌ User not found",
     send:"发送",
     notifications:"通知",
     myQr:"我的二维码",
+    valid:"有效",
+    scanToPay:"扫码付款",
 
     balance:"💰 可用余额",
     hide:"👁 隐藏",
@@ -1977,6 +1983,8 @@ userNotFound:"❌ 用户未找到",
     send:"إرسال",
     notifications:"الإشعارات",
     myQr:"رمز QR الخاص بي",
+    valid:"صالح",
+    scanToPay:"امسح للدفع",
 
     balance:"💰 الرصيد المتاح",
     hide:"👁 إخفاء",
@@ -2072,6 +2080,8 @@ userNotFound:"❌ المستخدم غير موجود",
     send:"Enviar",
     notifications:"Notificaciones",
     myQr:"Mi QR",
+    valid:"VÁLIDO",
+    scanToPay:"Escanear para pagar",
 
     balance:"💰 Saldo disponible",
     hide:"👁 Ocultar",
@@ -2167,6 +2177,8 @@ userNotFound:"❌ Usuario no encontrado",
     send:"Enviar",
     notifications:"Notificações",
     myQr:"Meu QR",
+    valid:"VÁLIDO",
+    scanToPay:"Escanear para pagar",
 
     balance:"💰 Saldo disponível",
     hide:"👁 Ocultar",
@@ -2262,6 +2274,8 @@ userNotFound:"❌ Usuário não encontrado",
     send:"Отправить",
     notifications:"Уведомления",
     myQr:"Мой QR",
+    valid:"ДЕЙСТВИТЕЛЬНО",
+    scanToPay:"Сканируйте для оплаты",
 
     balance:"💰 Доступный баланс",
     hide:"👁 Скрыть",
@@ -2357,6 +2371,8 @@ userNotFound:"❌ Пользователь не найден",
     send:"Senden",
     notifications:"Benachrichtigungen",
     myQr:"Mein QR",
+    valid:"GÜLTIG",
+    scanToPay:"Zum Bezahlen scannen",
 
     balance:"💰 Verfügbares Guthaben",
     hide:"👁 Ausblenden",
@@ -4126,7 +4142,7 @@ justify-content:space-between;
 font-size:13px;
 ">
 <span>${currentUser.name}</span>
-<span>VALID</span>
+<span>${tr("valid")}</span>
 </div>
 
 <!-- ✨ effet shine -->
@@ -4152,7 +4168,7 @@ box-shadow:0 10px 30px rgba(0,0,0,0.3);
 "></canvas>
 
 <p style="margin-top:10px;font-weight:bold;">
-Scanne pour payer
+${tr("scanToPay")}
 </p>
 </div>
 
