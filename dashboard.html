@@ -1746,6 +1746,7 @@ enterPassword:"Entrez votre mot de passe",
 
 moneySent:"📤 Argent envoyé",
 moneyReceived:"💰 Argent reçu",
+moneyRefundReceived:"💸 Remboursement reçu",
 moneySentScheduled:"📤 Argent envoyé (programmé)",
 moneyReceivedScheduled:"💰 Argent reçu (programmé)",
 claim:"🚨 Réclamation",
@@ -1843,6 +1844,7 @@ enterPassword:"Enter your password",
 
 moneySent:"📤 Money sent",
 moneyReceived:"💰 Money received",
+moneyRefundReceived:"💸 Refund received",
 moneySentScheduled:"📤 Money sent (scheduled)",
 moneyReceivedScheduled:"💰 Money received (scheduled)",
 claim:"🚨 Claim",
@@ -1940,6 +1942,7 @@ enterPassword:"请输入密码",
 
 moneySent:"📤 已发送金额",
 moneyReceived:"💰 已收到金额",
+moneyRefundReceived:"💸 已收到退款",
 moneySentScheduled:"📤 已发送金额（预约）",
 moneyReceivedScheduled:"💰 已收到金额（预约）",
 claim:"🚨 投诉",
@@ -2037,6 +2040,7 @@ enterPassword:"أدخل كلمة المرور",
 
 moneySent:"📤 تم إرسال المال",
 moneyReceived:"💰 تم استلام المال",
+moneyRefundReceived:"💸 تم استلام الاسترداد",
 moneySentScheduled:"📤 تم إرسال المال (مجدول)",
 moneyReceivedScheduled:"💰 تم استلام المال (مجدول)",
 claim:"🚨 شكوى",
@@ -2134,6 +2138,7 @@ enterPassword:"Introduce tu contraseña",
 
 moneySent:"📤 Dinero enviado",
 moneyReceived:"💰 Dinero recibido",
+moneyRefundReceived:"💸 Reembolso recibido",
 moneySentScheduled:"📤 Dinero enviado (programado)",
 moneyReceivedScheduled:"💰 Dinero recibido (programado)",
 claim:"🚨 Reclamación",
@@ -2231,6 +2236,7 @@ enterPassword:"Digite sua senha",
 
 moneySent:"📤 Dinheiro enviado",
 moneyReceived:"💰 Dinheiro recebido",
+moneyRefundReceived:"💸 Reembolso recebido",
 moneySentScheduled:"📤 Dinheiro enviado (programado)",
 moneyReceivedScheduled:"💰 Dinheiro recebido (programado)",
 claim:"🚨 Reclamação",
@@ -2328,6 +2334,7 @@ enterPassword:"Введите пароль",
 
 moneySent:"📤 Деньги отправлены",
 moneyReceived:"💰 Деньги получены",
+moneyRefundReceived:"💸 Возврат получен",
 moneySentScheduled:"📤 Деньги отправлены (запланировано)",
 moneyReceivedScheduled:"💰 Деньги получены (запланировано)",
 claim:"🚨 Жалоба",
@@ -2425,6 +2432,7 @@ enterPassword:"Passwort eingeben",
 
 moneySent:"📤 Geld gesendet",
 moneyReceived:"💰 Geld erhalten",
+moneyRefundReceived:"💸 Rückerstattung erhalten",
 moneySentScheduled:"📤 Geld gesendet (geplant)",
 moneyReceivedScheduled:"💰 Geld erhalten (geplant)",
 claim:"🚨 Reklamation",
@@ -2710,7 +2718,97 @@ return null;
 }
 }
 
-function formatMoney(a){ return Number(a).toLocaleString("fr-FR"); }
+function getCurrencyDecimals(currencyCode){
+  const code = currencyCode || "XOF";
+
+  /*
+  XOF / FCFA : pas de décimales visibles.
+  Les autres devises gardent 2 décimales.
+  */
+  if(code === "XOF") return 0;
+
+  return 2;
+}
+
+function formatMoney(amount, currencyInfo = null){
+  const value = Number(amount || 0);
+
+  const cur = currencyInfo || getCurrency(currentUser.phone);
+
+  const code = cur.code || "XOF";
+  const symbol = cur.symbol || code;
+
+  const decimals = getCurrencyDecimals(code);
+
+  return value.toLocaleString("fr-FR", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  }) + " " + symbol;
+}
+
+function formatMoneyForPhone(amount, phone){
+  const cur = getCurrency(phone);
+
+  return formatMoney(amount, cur);
+}
+
+function getVisibleBalanceAmount(user){
+  const cur = getCurrency(user.phone || currentUser.phone);
+  const solde = Number(user.solde || 0);
+
+  if(cur.code === "XOF"){
+    return Math.trunc(solde);
+  }
+
+  return solde;
+}
+
+function getHiddenDecimalAmount(user){
+  const cur = getCurrency(user.phone || currentUser.phone);
+  const solde = Number(user.solde || 0);
+
+  if(cur.code !== "XOF"){
+    return 0;
+  }
+
+  return solde - Math.trunc(solde);
+}
+
+async function normalizeUserDecimalBalance(userPhone, userData){
+  const cur = getCurrency(userPhone);
+  const solde = Number(userData.solde || 0);
+
+  /*
+  But :
+  - on n'arrondit pas ;
+  - on cache seulement les décimales FCFA ;
+  - si la partie décimale atteint 1 ou plus, on l'ajoute au solde visible.
+  Normalement, solde - Math.trunc(solde) est toujours inférieur à 1.
+  Mais cette fonction sécurise quand même le cas.
+  */
+
+  if(cur.code !== "XOF") return userData;
+
+  const visible = Math.trunc(solde);
+  const decimalPocket = Number(userData.decimalPocket || 0) + (solde - visible);
+
+  const decimalToAdd = Math.trunc(decimalPocket);
+  const decimalRest = decimalPocket - decimalToAdd;
+
+  const newSolde = visible + decimalToAdd + decimalRest;
+
+  if(decimalToAdd > 0 || Math.abs(decimalPocket - Number(userData.decimalPocket || 0)) > 0){
+    await update(ref(db,"users/" + userPhone), {
+      solde: newSolde,
+      decimalPocket: decimalRest
+    });
+
+    userData.solde = newSolde;
+    userData.decimalPocket = decimalRest;
+  }
+
+  return userData;
+}
 
 function generateTxID(){
 const d = new Date();
@@ -2733,19 +2831,48 @@ function listenBalance(){
 
 const userRef = ref(db,"users/"+currentUser.phone);
 
-onValue(userRef,(snap)=>{
+onValue(userRef, async (snap)=>{
 
 if(snap.exists()){
 
 currentUser = snap.val();
+currentUser.phone = currentUser.phone || JSON.parse(localStorage.getItem("loggedUser")).phone;
+
+currentUser = await normalizeUserDecimalBalance(currentUser.phone, currentUser);
+
 localStorage.setItem("loggedUser", JSON.stringify(currentUser));
 
 const cur = getCurrency(currentUser.phone);
+const visibleBalance = getVisibleBalanceAmount(currentUser);
+const decimalPocket = getHiddenDecimalAmount(currentUser);
 
 if(localStorage.getItem("balanceVisible") === "false"){
 soldeBox.innerText = "••••••••";
 }else{
-soldeBox.innerText = formatMoney(currentUser.solde) + " " + cur.symbol;
+soldeBox.innerText = formatMoney(visibleBalance, cur);
+}
+
+/* 🔥 petit cartable décimal dans la carte */
+const walletIcon = document.querySelector(".wallet-icon");
+
+if(walletIcon){
+  if(cur.code === "XOF" && decimalPocket > 0){
+    walletIcon.innerHTML = `
+      💼
+      <div style="
+        margin-top:6px;
+        font-size:11px;
+        background:rgba(0,0,0,0.25);
+        padding:4px 6px;
+        border-radius:8px;
+        line-height:1.2;
+      ">
+        +${decimalPocket.toFixed(3)} ${cur.symbol}
+      </div>
+    `;
+  }else{
+    walletIcon.innerHTML = "💼";
+  }
 }
 
 /* 🔥 photo */
@@ -2802,9 +2929,14 @@ if(snap.exists() && snap.val().password === pass){
 
 localStorage.setItem("balanceVisible","true");
 
-/* 🔥 IMPORTANT : rafraîchir DIRECTEMENT */
-const cur = getCurrency(currentUser.phone);
-soldeBox.innerText = formatMoney(currentUser.solde) + " " + cur.symbol;
+/* 🔥 IMPORTANT : afficher le solde visible sans décimales FCFA */
+const freshUser = snap.val();
+freshUser.phone = currentUser.phone;
+
+const cur = getCurrency(freshUser.phone);
+const visibleBalance = getVisibleBalanceAmount(freshUser);
+
+soldeBox.innerText = formatMoney(visibleBalance, cur);
 
 this.innerText = t.hide;
 
@@ -3171,6 +3303,8 @@ await push(ref(db,"notifications/"+receiverPhone),{
 title:"💰Argent reçu",
 phone:sender.phone,
 amount:convertedAmount,
+currency:receiverCur.code,
+symbol:receiverCur.symbol,
 reason,
 date:new Date().toLocaleString(),
 claimable:false,
@@ -3190,6 +3324,8 @@ await push(ref(db,"notifications/"+sender.phone),{
 title:"📤Argent envoyé",
 phone:receiverPhone,
 amount:amount,
+currency:senderCur.code,
+symbol:senderCur.symbol,
 reason,
 date:new Date().toLocaleString(),
 claimable:true,
@@ -3385,20 +3521,31 @@ status: "executed"
 
 /* ===== Notifications ===== */
 
+/* ===== Notifications ===== */
+
+const scheduledReceiverCur = getCurrency(tx.to);
+const scheduledSenderCur = getCurrency(tx.from);
+
 await push(ref(db,"notifications/"+tx.to),{
 title:"💰 Argent reçu (programmé)",
 phone:tx.from,
 amount:tx.amountConverted,
+currency:scheduledReceiverCur.code,
+symbol:scheduledReceiverCur.symbol,
 date:new Date().toLocaleString(),
-claimable:false
+claimable:false,
+seen:false
 });
 
 await push(ref(db,"notifications/"+tx.from),{
 title:"📤 Argent envoyé (programmé)",
 phone:tx.to,
 amount:tx.amountOriginal,
+currency:scheduledSenderCur.code,
+symbol:scheduledSenderCur.symbol,
 date:new Date().toLocaleString(),
 claimable:true,
+seen:false,
 txId:historyRef.key
 });
 
@@ -3571,6 +3718,63 @@ alert(tr("claimSent"));
 };
 
 /* ===== NOTIFICATIONS ===== */
+function getNotificationTitle(title){
+  let text = title || "";
+
+  if(
+    text.includes("Argent envoyé") ||
+    text.includes("Money sent") ||
+    text.includes("Dinero enviado") ||
+    text.includes("Dinheiro enviado") ||
+    text.includes("Geld gesendet") ||
+    text.includes("Деньги отправлены") ||
+    text.includes("已发送")
+  ){
+    return tr("moneySent");
+  }
+
+  if(
+    text.includes("Argent reçu") ||
+    text.includes("Money received") ||
+    text.includes("Dinero recibido") ||
+    text.includes("Dinheiro recebido") ||
+    text.includes("Geld erhalten") ||
+    text.includes("Деньги получены") ||
+    text.includes("已收到")
+  ){
+    return tr("moneyReceived");
+  }
+
+  if(
+    text.includes("Remboursement") ||
+    text.includes("Refund") ||
+    text.includes("Reembolso") ||
+    text.includes("Rückerstattung") ||
+    text.includes("Возврат") ||
+    text.includes("退款") ||
+    text.includes("استرداد")
+  ){
+    return tr("moneyRefundReceived");
+  }
+
+  return text;
+}
+
+function getNotificationCurrency(n){
+  if(n.currency && n.symbol){
+    return {
+      code:n.currency,
+      symbol:n.symbol
+    };
+  }
+
+  if(n.phone){
+    return getCurrency(n.phone);
+  }
+
+  return getCurrency(currentUser.phone);
+}
+
 async function loadNotifications(){
   const snap = await get(ref(db,"notifications/" + currentUser.phone));
   notifBox.innerHTML = "";
@@ -3580,28 +3784,58 @@ async function loadNotifications(){
     Object.entries(snap.val()).reverse().forEach(([id,n])=>{
       if(!n.seen) count++;
 
-      let title = n.title || "";
-
-      if(title.includes("Argent envoyé") || title.includes("Money sent")){
-        title = tr("moneySent");
-      }
-
-      if(title.includes("Argent reçu") || title.includes("Money received")){
-        title = tr("moneyReceived");
-      }
+      const title = getNotificationTitle(n.title);
+      const notifCur = getNotificationCurrency(n);
 
       notifBox.innerHTML += `
-        <div class="notif-card">
+        <div class="notif-card" style="
+          background:rgba(255,255,255,0.96);
+          color:#222;
+          border-left:5px solid #ff7a00;
+          line-height:1.6;
+        ">
 
-          <div class="notif-title">${title}</div>
+          <div class="notif-title" style="
+            color:#111;
+            font-weight:800;
+            margin-bottom:6px;
+          ">
+            ${title}
+          </div>
 
-          📱 ${n.phone || ""}<br>
+          <div style="color:#333;">
+            📱 ${n.phone || ""}
+          </div>
 
-          💰 <span class="notif-amount">${formatMoney(n.amount || 0)}</span><br>
+          <div style="color:#333;">
+            💰 <span class="notif-amount" style="
+              color:#008f5a;
+              font-weight:800;
+            ">
+              ${formatMoney(n.amount || 0, notifCur)}
+            </span>
+          </div>
 
-          <div class="notif-date">🕒 ${n.date || ""}</div>
+          <div class="notif-date" style="
+            color:#666;
+            font-size:11px;
+            margin-top:4px;
+          ">
+            🕒 ${n.date || ""}
+          </div>
 
-          ${n.reason ? `<div>${n.reason}</div>` : ""}
+          ${n.reason ? `
+            <div style="
+              margin-top:6px;
+              color:#222;
+              background:#f4f4f4;
+              padding:8px;
+              border-radius:10px;
+              word-break:break-word;
+            ">
+              ${n.reason}
+            </div>
+          ` : ""}
 
           ${n.claimable && n.txId ? `
             <button onclick="sendClaim('${n.txId}')" style="background:red;">
@@ -3644,17 +3878,10 @@ const last = Object.values(snapshot.val()).pop();
 
 if(last && !last.seen){
 
-let toastTitle = last.title || "";
+const toastTitle = getNotificationTitle(last.title);
+const toastCur = getNotificationCurrency(last);
 
-if(toastTitle.includes("Argent envoyé") || toastTitle.includes("Money sent")){
-  toastTitle = tr("moneySent");
-}
-
-if(toastTitle.includes("Argent reçu") || toastTitle.includes("Money received")){
-  toastTitle = tr("moneyReceived");
-}
-
-showToast(toastTitle + " - " + formatMoney(last.amount || 0));
+showToast(toastTitle + " - " + formatMoney(last.amount || 0, toastCur));
 
 }
 }
