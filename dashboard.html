@@ -471,34 +471,65 @@ display: none;
 }
 
 .history-box {
-margin-top: 20px;
-background: rgba(255,255,255,0.12);
-backdrop-filter: blur(12px);
-border: 1px solid rgba(255,255,255,0.2);
-color: white;
-padding: 15px;
-border-radius: 15px;
-box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  margin-top: 20px;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 15px;
+  border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
 }
 
 .history-item {
-background: rgba(255,255,255,0.15);
-backdrop-filter: blur(8px);
-color: white;
-padding: 12px;
-margin-bottom: 10px;
-border-radius: 12px;
-box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-font-size: 14px;
+  background: rgba(255,255,255,0.96);
+  color: #222;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 18px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+  font-size: 14px;
+  border-left: 5px solid #ff6a00;
 
-display:flex;
-flex-direction:column;
-gap:5px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
 
-animation: slideFade 0.4s ease;
-transition:0.3s;
+  animation: slideFade 0.4s ease;
+  transition:0.3s;
 }
 
+.history-title{
+  font-weight: 900;
+  font-size: 16px;
+  color: #222;
+}
+
+.history-phone{
+  color:#333;
+  font-weight: 600;
+}
+
+.history-amount{
+  color:#009b63;
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.history-date{
+  color:#666;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.history-reason{
+  background:#f5f5f5;
+  color:#222;
+  padding:10px;
+  border-radius:12px;
+  font-weight:600;
+  word-break: break-word;
+}
 /* ✨ animation entrée */
 @keyframes slideFade{
 from{
@@ -693,26 +724,63 @@ color:white;
 }
 
 .notif-card{
-background: rgba(255,255,255,0.95);
-border-radius: 15px;
-padding: 12px;
-margin-bottom: 10px;
-box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.96);
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+  color: #222;
+  border-left: 5px solid #ff6a00;
 }
 
 .notif-title{
-font-weight: bold;
-color:#333;
+  font-weight: 900;
+  color:#222;
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+
+.notif-line{
+  color:#333;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 5px 0;
 }
 
 .notif-amount{
-color:#00a86b;
-font-weight:bold;
+  color:#009b63;
+  font-weight:900;
+  font-size: 16px;
 }
 
 .notif-date{
-font-size:11px;
-color:gray;
+  font-size:12px;
+  color:#666;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+.notif-reason{
+  margin-top: 10px;
+  background: #f5f5f5;
+  color: #222;
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.claim-btn{
+  background: linear-gradient(45deg,#ff3d00,#ff0000) !important;
+  color:white !important;
+  margin-top: 12px;
+}
+
+.delete-btn{
+  background: linear-gradient(45deg,#d90429,#9d0208) !important;
+  color:white !important;
+  margin-top: 10px;
 }
 
 @keyframes shine {
@@ -3761,17 +3829,10 @@ function getNotificationTitle(title){
 }
 
 function getNotificationCurrency(n){
-  if(n.currency && n.symbol){
-    return {
-      code:n.currency,
-      symbol:n.symbol
-    };
-  }
-
-  if(n.phone){
-    return getCurrency(n.phone);
-  }
-
+  /*
+    Dans les notifications, on affiche toujours
+    la devise locale de l'utilisateur connecté.
+  */
   return getCurrency(currentUser.phone);
 }
 
@@ -3788,62 +3849,27 @@ async function loadNotifications(){
       const notifCur = getNotificationCurrency(n);
 
       notifBox.innerHTML += `
-        <div class="notif-card" style="
-          background:rgba(255,255,255,0.96);
-          color:#222;
-          border-left:5px solid #ff7a00;
-          line-height:1.6;
-        ">
+        <div class="notif-card">
 
-          <div class="notif-title" style="
-            color:#111;
-            font-weight:800;
-            margin-bottom:6px;
-          ">
-            ${title}
+          <div class="notif-title">${title}</div>
+
+          <div class="notif-line">📱 ${n.phone || ""}</div>
+
+          <div class="notif-line">
+            💰 <span class="notif-amount">${formatMoney(n.amount || 0, notifCur)}</span>
           </div>
 
-          <div style="color:#333;">
-            📱 ${n.phone || ""}
-          </div>
+          <div class="notif-date">🕒 ${n.date || ""}</div>
 
-          <div style="color:#333;">
-            💰 <span class="notif-amount" style="
-              color:#008f5a;
-              font-weight:800;
-            ">
-              ${formatMoney(n.amount || 0, notifCur)}
-            </span>
-          </div>
-
-          <div class="notif-date" style="
-            color:#666;
-            font-size:11px;
-            margin-top:4px;
-          ">
-            🕒 ${n.date || ""}
-          </div>
-
-          ${n.reason ? `
-            <div style="
-              margin-top:6px;
-              color:#222;
-              background:#f4f4f4;
-              padding:8px;
-              border-radius:10px;
-              word-break:break-word;
-            ">
-              ${n.reason}
-            </div>
-          ` : ""}
+          ${n.reason ? `<div class="notif-reason">${n.reason}</div>` : ""}
 
           ${n.claimable && n.txId ? `
-            <button onclick="sendClaim('${n.txId}')" style="background:red;">
+            <button onclick="sendClaim('${n.txId}')" class="claim-btn">
               ${tr("claim")}
             </button>
           ` : ""}
 
-          <button onclick="deleteNotif('${id}')" style="background:crimson;">
+          <button onclick="deleteNotif('${id}')" class="delete-btn">
             ${tr("delete")}
           </button>
 
@@ -4233,81 +4259,72 @@ modal.classList.add("hidden");
 }
 
 function listenHistory(){
-const historyRef = ref(db,"history/"+currentUser.phone);
+  const historyRef = ref(db,"history/" + currentUser.phone);
 
-onValue(historyRef,(snap)=>{
+  onValue(historyRef,(snap)=>{
 
-const historyList = document.getElementById("historyList");
-historyList.innerHTML = "";
+    const historyList = document.getElementById("historyList");
+    historyList.innerHTML = "";
 
-if(!snap.exists()) return;
+    if(!snap.exists()){
+      historyList.innerHTML = `
+        <div class="history-item">
+          <div class="history-title">Aucune activité</div>
+        </div>
+      `;
+      return;
+    }
 
-Object.entries(snap.val())
-.reverse()
-.slice(0,5)
-.forEach(([id,tx],index)=>{
+    const cur = getCurrency(currentUser.phone);
 
-/* 🔥 VARIABLES */
-let icon = "⬇";
-let sign = "+";
-let color = "#00c853";
+    Object.entries(snap.val())
+      .reverse()
+      .slice(0,10)
+      .forEach(([id,tx])=>{
 
-/* 🔥 LOGIQUE */
-if(tx.type === "withdraw"){
-icon = "⬆";
-sign = "-";
-color = "#ff1744";
-}
-else if(tx.type === "deposit"){
-icon = "⬇";
-sign = "+";
-color = "#00c853";
-}
-else if(tx.from === currentUser.phone){
-icon = "⬆";
-sign = "-";
-color = "#ff1744";
-}
+        const isSent = tx.from === currentUser.phone;
 
-/* 🔥 DATA SAFE */
-const amount = tx.amountOriginal || tx.amountConverted || tx.amount || 0;
-const phone = tx.from === currentUser.phone ? tx.to : tx.from;
-const date = tx.date || "Date inconnue";
+        let title = isSent ? tr("moneySent") : tr("moneyReceived");
+        let phone = isSent ? tx.to : tx.from;
 
-/* 🔥 animation */
-const isNew = index === 0;
+        /*
+          Cas retrait / dépôt si tu les utilises dans ton historique
+        */
+        if(tx.type === "withdraw"){
+          title = "📤 Retrait";
+          phone = tx.agentPhone || tx.to || "";
+        }
 
-/* 🔥 AFFICHAGE */
-historyList.innerHTML += `
-<div class="history-item ${isNew ? 'new-tx' : ''}">
-<div style="display:flex;justify-content:space-between;align-items:center;">
-<span style="font-weight:bold;color:${color};font-size:16px;">
-${icon} ${sign}${formatMoney(amount)}
-</span>
+        if(tx.type === "deposit"){
+          title = "💰 Dépôt";
+          phone = tx.agentPhone || tx.from || "";
+        }
 
-<div style="display:flex;gap:8px;align-items:center;">
-<span style="font-size:12px;color:gray;">
-${date}
-</span>
+        const amount =
+          tx.amountOriginal !== undefined
+          ? tx.amountOriginal
+          : tx.amountConverted || tx.amount || 0;
 
-<button onclick="deleteHistory('${id}')"
-style="background:red;color:white;border:none;border-radius:6px;padding:2px 6px;font-size:11px;">
-X
-</button>
-</div>
+        historyList.innerHTML += `
+          <div class="history-item">
 
-</div>
+            <div class="history-title">${title}</div>
 
-<div style="font-size:13px;color:#333;">
-📱 ${phone || "Inconnu"}
-</div>
+            <div class="history-phone">📱 ${phone || ""}</div>
 
-</div>
-`;
+            <div class="history-amount">
+              💰 ${formatMoney(amount, cur)}
+            </div>
 
-});
+            <div class="history-date">🕒 ${tx.date || ""}</div>
 
-});
+            ${tx.reason ? `<div class="history-reason">${tx.reason}</div>` : ""}
+
+          </div>
+        `;
+      });
+
+  });
 }
 listenHistory();
 
